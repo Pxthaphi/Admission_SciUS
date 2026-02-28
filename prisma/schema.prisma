@@ -178,6 +178,8 @@ model Enrollment {
   studentId            Int                @unique
   confirmationStatus   ConfirmationStatus @default(PENDING)
   documentReviewStatus ReviewStatus       @default(PENDING)
+  documentRemark       String?
+  revisionDocTypes     String[]           @default([])
   reviewedBy           Int?
   confirmedAt          DateTime?
   createdAt            DateTime           @default(now())

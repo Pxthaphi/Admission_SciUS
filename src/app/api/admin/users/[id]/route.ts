@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
+import { writeAuditLog } from "@/lib/audit";
 import bcrypt from "bcryptjs";
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -15,6 +16,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 
   try {
     if (type === "student") {
+      const old = await prisma.student.findUnique({ where: { id: parseInt(id) } });
       const student = await prisma.student.update({
         where: { id: parseInt(id) },
         data: {
@@ -30,6 +32,15 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
           email: body.email || null,
         },
       });
+      await writeAuditLog({
+        userId: parseInt(session.user.id),
+        userRole: session.user.role,
+        action: "UPDATE_STUDENT",
+        targetTable: "Student",
+        targetId: student.id,
+        oldValue: old ? { firstName: old.firstName, lastName: old.lastName, examId: old.examId } : null,
+        newValue: { firstName: body.firstName, lastName: body.lastName, examId: body.examId },
+      });
       return NextResponse.json(student);
     } else {
       const data: Record<string, unknown> = {
@@ -40,9 +51,16 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       if (body.password) {
         data.password = await bcrypt.hash(body.password, 12);
       }
-      const admin = await prisma.admin.update({
-        where: { id: parseInt(id) },
-        data,
+      const old = await prisma.admin.findUnique({ where: { id: parseInt(id) } });
+      const admin = await prisma.admin.update({ where: { id: parseInt(id) }, data });
+      await writeAuditLog({
+        userId: parseInt(session.user.id),
+        userRole: session.user.role,
+        action: "UPDATE_ADMIN",
+        targetTable: "Admin",
+        targetId: admin.id,
+        oldValue: old ? { username: old.username, fullName: old.fullName, role: old.role } : null,
+        newValue: { username: body.username, fullName: body.fullName, role: body.role },
       });
       return NextResponse.json({ id: admin.id, username: admin.username, fullName: admin.fullName, role: admin.role });
     }
@@ -63,9 +81,31 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
 
   try {
     if (type === "student") {
+      const old = await prisma.student.findUnique({ where: { id: parseInt(id) } });
       await prisma.student.delete({ where: { id: parseInt(id) } });
+      if (old) {
+        await writeAuditLog({
+          userId: parseInt(session.user.id),
+          userRole: session.user.role,
+          action: "DELETE_STUDENT",
+          targetTable: "Student",
+          targetId: parseInt(id),
+          oldValue: { firstName: old.firstName, lastName: old.lastName, examId: old.examId },
+        });
+      }
     } else {
+      const old = await prisma.admin.findUnique({ where: { id: parseInt(id) } });
       await prisma.admin.delete({ where: { id: parseInt(id) } });
+      if (old) {
+        await writeAuditLog({
+          userId: parseInt(session.user.id),
+          userRole: session.user.role,
+          action: "DELETE_ADMIN",
+          targetTable: "Admin",
+          targetId: parseInt(id),
+          oldValue: { username: old.username, fullName: old.fullName },
+        });
+      }
     }
     return NextResponse.json({ success: true });
   } catch (error: unknown) {

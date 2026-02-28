@@ -43,6 +43,7 @@ export type EnrollmentMinAggregateOutputType = {
   studentId: number | null
   confirmationStatus: $Enums.ConfirmationStatus | null
   documentReviewStatus: $Enums.ReviewStatus | null
+  documentRemark: string | null
   reviewedBy: number | null
   confirmedAt: Date | null
   createdAt: Date | null
@@ -54,6 +55,7 @@ export type EnrollmentMaxAggregateOutputType = {
   studentId: number | null
   confirmationStatus: $Enums.ConfirmationStatus | null
   documentReviewStatus: $Enums.ReviewStatus | null
+  documentRemark: string | null
   reviewedBy: number | null
   confirmedAt: Date | null
   createdAt: Date | null
@@ -65,6 +67,8 @@ export type EnrollmentCountAggregateOutputType = {
   studentId: number
   confirmationStatus: number
   documentReviewStatus: number
+  documentRemark: number
+  revisionDocTypes: number
   reviewedBy: number
   confirmedAt: number
   createdAt: number
@@ -90,6 +94,7 @@ export type EnrollmentMinAggregateInputType = {
   studentId?: true
   confirmationStatus?: true
   documentReviewStatus?: true
+  documentRemark?: true
   reviewedBy?: true
   confirmedAt?: true
   createdAt?: true
@@ -101,6 +106,7 @@ export type EnrollmentMaxAggregateInputType = {
   studentId?: true
   confirmationStatus?: true
   documentReviewStatus?: true
+  documentRemark?: true
   reviewedBy?: true
   confirmedAt?: true
   createdAt?: true
@@ -112,6 +118,8 @@ export type EnrollmentCountAggregateInputType = {
   studentId?: true
   confirmationStatus?: true
   documentReviewStatus?: true
+  documentRemark?: true
+  revisionDocTypes?: true
   reviewedBy?: true
   confirmedAt?: true
   createdAt?: true
@@ -210,6 +218,8 @@ export type EnrollmentGroupByOutputType = {
   studentId: number
   confirmationStatus: $Enums.ConfirmationStatus
   documentReviewStatus: $Enums.ReviewStatus
+  documentRemark: string | null
+  revisionDocTypes: string[]
   reviewedBy: number | null
   confirmedAt: Date | null
   createdAt: Date
@@ -244,6 +254,8 @@ export type EnrollmentWhereInput = {
   studentId?: Prisma.IntFilter<"Enrollment"> | number
   confirmationStatus?: Prisma.EnumConfirmationStatusFilter<"Enrollment"> | $Enums.ConfirmationStatus
   documentReviewStatus?: Prisma.EnumReviewStatusFilter<"Enrollment"> | $Enums.ReviewStatus
+  documentRemark?: Prisma.StringNullableFilter<"Enrollment"> | string | null
+  revisionDocTypes?: Prisma.StringNullableListFilter<"Enrollment">
   reviewedBy?: Prisma.IntNullableFilter<"Enrollment"> | number | null
   confirmedAt?: Prisma.DateTimeNullableFilter<"Enrollment"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Enrollment"> | Date | string
@@ -257,6 +269,8 @@ export type EnrollmentOrderByWithRelationInput = {
   studentId?: Prisma.SortOrder
   confirmationStatus?: Prisma.SortOrder
   documentReviewStatus?: Prisma.SortOrder
+  documentRemark?: Prisma.SortOrderInput | Prisma.SortOrder
+  revisionDocTypes?: Prisma.SortOrder
   reviewedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   confirmedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -273,6 +287,8 @@ export type EnrollmentWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.EnrollmentWhereInput | Prisma.EnrollmentWhereInput[]
   confirmationStatus?: Prisma.EnumConfirmationStatusFilter<"Enrollment"> | $Enums.ConfirmationStatus
   documentReviewStatus?: Prisma.EnumReviewStatusFilter<"Enrollment"> | $Enums.ReviewStatus
+  documentRemark?: Prisma.StringNullableFilter<"Enrollment"> | string | null
+  revisionDocTypes?: Prisma.StringNullableListFilter<"Enrollment">
   reviewedBy?: Prisma.IntNullableFilter<"Enrollment"> | number | null
   confirmedAt?: Prisma.DateTimeNullableFilter<"Enrollment"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Enrollment"> | Date | string
@@ -286,6 +302,8 @@ export type EnrollmentOrderByWithAggregationInput = {
   studentId?: Prisma.SortOrder
   confirmationStatus?: Prisma.SortOrder
   documentReviewStatus?: Prisma.SortOrder
+  documentRemark?: Prisma.SortOrderInput | Prisma.SortOrder
+  revisionDocTypes?: Prisma.SortOrder
   reviewedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   confirmedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -305,6 +323,8 @@ export type EnrollmentScalarWhereWithAggregatesInput = {
   studentId?: Prisma.IntWithAggregatesFilter<"Enrollment"> | number
   confirmationStatus?: Prisma.EnumConfirmationStatusWithAggregatesFilter<"Enrollment"> | $Enums.ConfirmationStatus
   documentReviewStatus?: Prisma.EnumReviewStatusWithAggregatesFilter<"Enrollment"> | $Enums.ReviewStatus
+  documentRemark?: Prisma.StringNullableWithAggregatesFilter<"Enrollment"> | string | null
+  revisionDocTypes?: Prisma.StringNullableListFilter<"Enrollment">
   reviewedBy?: Prisma.IntNullableWithAggregatesFilter<"Enrollment"> | number | null
   confirmedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Enrollment"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Enrollment"> | Date | string
@@ -314,6 +334,8 @@ export type EnrollmentScalarWhereWithAggregatesInput = {
 export type EnrollmentCreateInput = {
   confirmationStatus?: $Enums.ConfirmationStatus
   documentReviewStatus?: $Enums.ReviewStatus
+  documentRemark?: string | null
+  revisionDocTypes?: Prisma.EnrollmentCreaterevisionDocTypesInput | string[]
   confirmedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -326,6 +348,8 @@ export type EnrollmentUncheckedCreateInput = {
   studentId: number
   confirmationStatus?: $Enums.ConfirmationStatus
   documentReviewStatus?: $Enums.ReviewStatus
+  documentRemark?: string | null
+  revisionDocTypes?: Prisma.EnrollmentCreaterevisionDocTypesInput | string[]
   reviewedBy?: number | null
   confirmedAt?: Date | string | null
   createdAt?: Date | string
@@ -335,6 +359,8 @@ export type EnrollmentUncheckedCreateInput = {
 export type EnrollmentUpdateInput = {
   confirmationStatus?: Prisma.EnumConfirmationStatusFieldUpdateOperationsInput | $Enums.ConfirmationStatus
   documentReviewStatus?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
+  documentRemark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  revisionDocTypes?: Prisma.EnrollmentUpdaterevisionDocTypesInput | string[]
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -347,6 +373,8 @@ export type EnrollmentUncheckedUpdateInput = {
   studentId?: Prisma.IntFieldUpdateOperationsInput | number
   confirmationStatus?: Prisma.EnumConfirmationStatusFieldUpdateOperationsInput | $Enums.ConfirmationStatus
   documentReviewStatus?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
+  documentRemark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  revisionDocTypes?: Prisma.EnrollmentUpdaterevisionDocTypesInput | string[]
   reviewedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -358,6 +386,8 @@ export type EnrollmentCreateManyInput = {
   studentId: number
   confirmationStatus?: $Enums.ConfirmationStatus
   documentReviewStatus?: $Enums.ReviewStatus
+  documentRemark?: string | null
+  revisionDocTypes?: Prisma.EnrollmentCreaterevisionDocTypesInput | string[]
   reviewedBy?: number | null
   confirmedAt?: Date | string | null
   createdAt?: Date | string
@@ -367,6 +397,8 @@ export type EnrollmentCreateManyInput = {
 export type EnrollmentUpdateManyMutationInput = {
   confirmationStatus?: Prisma.EnumConfirmationStatusFieldUpdateOperationsInput | $Enums.ConfirmationStatus
   documentReviewStatus?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
+  documentRemark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  revisionDocTypes?: Prisma.EnrollmentUpdaterevisionDocTypesInput | string[]
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -377,6 +409,8 @@ export type EnrollmentUncheckedUpdateManyInput = {
   studentId?: Prisma.IntFieldUpdateOperationsInput | number
   confirmationStatus?: Prisma.EnumConfirmationStatusFieldUpdateOperationsInput | $Enums.ConfirmationStatus
   documentReviewStatus?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
+  documentRemark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  revisionDocTypes?: Prisma.EnrollmentUpdaterevisionDocTypesInput | string[]
   reviewedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -403,6 +437,8 @@ export type EnrollmentCountOrderByAggregateInput = {
   studentId?: Prisma.SortOrder
   confirmationStatus?: Prisma.SortOrder
   documentReviewStatus?: Prisma.SortOrder
+  documentRemark?: Prisma.SortOrder
+  revisionDocTypes?: Prisma.SortOrder
   reviewedBy?: Prisma.SortOrder
   confirmedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -420,6 +456,7 @@ export type EnrollmentMaxOrderByAggregateInput = {
   studentId?: Prisma.SortOrder
   confirmationStatus?: Prisma.SortOrder
   documentReviewStatus?: Prisma.SortOrder
+  documentRemark?: Prisma.SortOrder
   reviewedBy?: Prisma.SortOrder
   confirmedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -431,6 +468,7 @@ export type EnrollmentMinOrderByAggregateInput = {
   studentId?: Prisma.SortOrder
   confirmationStatus?: Prisma.SortOrder
   documentReviewStatus?: Prisma.SortOrder
+  documentRemark?: Prisma.SortOrder
   reviewedBy?: Prisma.SortOrder
   confirmedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -517,13 +555,24 @@ export type EnrollmentUncheckedUpdateOneWithoutStudentNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.EnrollmentUpdateToOneWithWhereWithoutStudentInput, Prisma.EnrollmentUpdateWithoutStudentInput>, Prisma.EnrollmentUncheckedUpdateWithoutStudentInput>
 }
 
+export type EnrollmentCreaterevisionDocTypesInput = {
+  set: string[]
+}
+
 export type EnumConfirmationStatusFieldUpdateOperationsInput = {
   set?: $Enums.ConfirmationStatus
+}
+
+export type EnrollmentUpdaterevisionDocTypesInput = {
+  set?: string[]
+  push?: string | string[]
 }
 
 export type EnrollmentCreateWithoutReviewerInput = {
   confirmationStatus?: $Enums.ConfirmationStatus
   documentReviewStatus?: $Enums.ReviewStatus
+  documentRemark?: string | null
+  revisionDocTypes?: Prisma.EnrollmentCreaterevisionDocTypesInput | string[]
   confirmedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -535,6 +584,8 @@ export type EnrollmentUncheckedCreateWithoutReviewerInput = {
   studentId: number
   confirmationStatus?: $Enums.ConfirmationStatus
   documentReviewStatus?: $Enums.ReviewStatus
+  documentRemark?: string | null
+  revisionDocTypes?: Prisma.EnrollmentCreaterevisionDocTypesInput | string[]
   confirmedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -574,6 +625,8 @@ export type EnrollmentScalarWhereInput = {
   studentId?: Prisma.IntFilter<"Enrollment"> | number
   confirmationStatus?: Prisma.EnumConfirmationStatusFilter<"Enrollment"> | $Enums.ConfirmationStatus
   documentReviewStatus?: Prisma.EnumReviewStatusFilter<"Enrollment"> | $Enums.ReviewStatus
+  documentRemark?: Prisma.StringNullableFilter<"Enrollment"> | string | null
+  revisionDocTypes?: Prisma.StringNullableListFilter<"Enrollment">
   reviewedBy?: Prisma.IntNullableFilter<"Enrollment"> | number | null
   confirmedAt?: Prisma.DateTimeNullableFilter<"Enrollment"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Enrollment"> | Date | string
@@ -583,6 +636,8 @@ export type EnrollmentScalarWhereInput = {
 export type EnrollmentCreateWithoutStudentInput = {
   confirmationStatus?: $Enums.ConfirmationStatus
   documentReviewStatus?: $Enums.ReviewStatus
+  documentRemark?: string | null
+  revisionDocTypes?: Prisma.EnrollmentCreaterevisionDocTypesInput | string[]
   confirmedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -593,6 +648,8 @@ export type EnrollmentUncheckedCreateWithoutStudentInput = {
   id?: number
   confirmationStatus?: $Enums.ConfirmationStatus
   documentReviewStatus?: $Enums.ReviewStatus
+  documentRemark?: string | null
+  revisionDocTypes?: Prisma.EnrollmentCreaterevisionDocTypesInput | string[]
   reviewedBy?: number | null
   confirmedAt?: Date | string | null
   createdAt?: Date | string
@@ -618,6 +675,8 @@ export type EnrollmentUpdateToOneWithWhereWithoutStudentInput = {
 export type EnrollmentUpdateWithoutStudentInput = {
   confirmationStatus?: Prisma.EnumConfirmationStatusFieldUpdateOperationsInput | $Enums.ConfirmationStatus
   documentReviewStatus?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
+  documentRemark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  revisionDocTypes?: Prisma.EnrollmentUpdaterevisionDocTypesInput | string[]
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -628,6 +687,8 @@ export type EnrollmentUncheckedUpdateWithoutStudentInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   confirmationStatus?: Prisma.EnumConfirmationStatusFieldUpdateOperationsInput | $Enums.ConfirmationStatus
   documentReviewStatus?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
+  documentRemark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  revisionDocTypes?: Prisma.EnrollmentUpdaterevisionDocTypesInput | string[]
   reviewedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -639,6 +700,8 @@ export type EnrollmentCreateManyReviewerInput = {
   studentId: number
   confirmationStatus?: $Enums.ConfirmationStatus
   documentReviewStatus?: $Enums.ReviewStatus
+  documentRemark?: string | null
+  revisionDocTypes?: Prisma.EnrollmentCreaterevisionDocTypesInput | string[]
   confirmedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -647,6 +710,8 @@ export type EnrollmentCreateManyReviewerInput = {
 export type EnrollmentUpdateWithoutReviewerInput = {
   confirmationStatus?: Prisma.EnumConfirmationStatusFieldUpdateOperationsInput | $Enums.ConfirmationStatus
   documentReviewStatus?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
+  documentRemark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  revisionDocTypes?: Prisma.EnrollmentUpdaterevisionDocTypesInput | string[]
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -658,6 +723,8 @@ export type EnrollmentUncheckedUpdateWithoutReviewerInput = {
   studentId?: Prisma.IntFieldUpdateOperationsInput | number
   confirmationStatus?: Prisma.EnumConfirmationStatusFieldUpdateOperationsInput | $Enums.ConfirmationStatus
   documentReviewStatus?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
+  documentRemark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  revisionDocTypes?: Prisma.EnrollmentUpdaterevisionDocTypesInput | string[]
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -668,6 +735,8 @@ export type EnrollmentUncheckedUpdateManyWithoutReviewerInput = {
   studentId?: Prisma.IntFieldUpdateOperationsInput | number
   confirmationStatus?: Prisma.EnumConfirmationStatusFieldUpdateOperationsInput | $Enums.ConfirmationStatus
   documentReviewStatus?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
+  documentRemark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  revisionDocTypes?: Prisma.EnrollmentUpdaterevisionDocTypesInput | string[]
   confirmedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -680,6 +749,8 @@ export type EnrollmentSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   studentId?: boolean
   confirmationStatus?: boolean
   documentReviewStatus?: boolean
+  documentRemark?: boolean
+  revisionDocTypes?: boolean
   reviewedBy?: boolean
   confirmedAt?: boolean
   createdAt?: boolean
@@ -693,6 +764,8 @@ export type EnrollmentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   studentId?: boolean
   confirmationStatus?: boolean
   documentReviewStatus?: boolean
+  documentRemark?: boolean
+  revisionDocTypes?: boolean
   reviewedBy?: boolean
   confirmedAt?: boolean
   createdAt?: boolean
@@ -706,6 +779,8 @@ export type EnrollmentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   studentId?: boolean
   confirmationStatus?: boolean
   documentReviewStatus?: boolean
+  documentRemark?: boolean
+  revisionDocTypes?: boolean
   reviewedBy?: boolean
   confirmedAt?: boolean
   createdAt?: boolean
@@ -719,13 +794,15 @@ export type EnrollmentSelectScalar = {
   studentId?: boolean
   confirmationStatus?: boolean
   documentReviewStatus?: boolean
+  documentRemark?: boolean
+  revisionDocTypes?: boolean
   reviewedBy?: boolean
   confirmedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type EnrollmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "confirmationStatus" | "documentReviewStatus" | "reviewedBy" | "confirmedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["enrollment"]>
+export type EnrollmentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "confirmationStatus" | "documentReviewStatus" | "documentRemark" | "revisionDocTypes" | "reviewedBy" | "confirmedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["enrollment"]>
 export type EnrollmentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   reviewer?: boolean | Prisma.Enrollment$reviewerArgs<ExtArgs>
@@ -750,6 +827,8 @@ export type $EnrollmentPayload<ExtArgs extends runtime.Types.Extensions.Internal
     studentId: number
     confirmationStatus: $Enums.ConfirmationStatus
     documentReviewStatus: $Enums.ReviewStatus
+    documentRemark: string | null
+    revisionDocTypes: string[]
     reviewedBy: number | null
     confirmedAt: Date | null
     createdAt: Date
@@ -1183,6 +1262,8 @@ export interface EnrollmentFieldRefs {
   readonly studentId: Prisma.FieldRef<"Enrollment", 'Int'>
   readonly confirmationStatus: Prisma.FieldRef<"Enrollment", 'ConfirmationStatus'>
   readonly documentReviewStatus: Prisma.FieldRef<"Enrollment", 'ReviewStatus'>
+  readonly documentRemark: Prisma.FieldRef<"Enrollment", 'String'>
+  readonly revisionDocTypes: Prisma.FieldRef<"Enrollment", 'String[]'>
   readonly reviewedBy: Prisma.FieldRef<"Enrollment", 'Int'>
   readonly confirmedAt: Prisma.FieldRef<"Enrollment", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Enrollment", 'DateTime'>

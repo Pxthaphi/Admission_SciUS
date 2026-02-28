@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
+import { writeAuditLog } from "@/lib/audit";
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
@@ -11,7 +12,6 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   const { id } = await params;
   const { result, rank, remark } = await req.json();
 
-  // Get the exam result record to find studentId
   const existing = await prisma.examResult.findUnique({
     where: { id: parseInt(id) },
   });
@@ -19,7 +19,6 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  // Step validation: eligibility must be ELIGIBLE before setting exam result
   if (result === "PASSED_PRIMARY" || result === "PASSED_RESERVE") {
     const eligibility = await prisma.examEligibility.findUnique({
       where: { studentId: existing.studentId },
@@ -42,7 +41,16 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     },
   });
 
-  // Auto-create enrollment record for passed students
+  await writeAuditLog({
+    userId: parseInt(session.user.id),
+    userRole: session.user.role,
+    action: "UPDATE_EXAM_RESULT",
+    targetTable: "ExamResult",
+    targetId: examResult.id,
+    oldValue: { result: existing.result, rank: existing.rank, remark: existing.remark },
+    newValue: { result, rank, remark },
+  });
+
   if (result === "PASSED_PRIMARY" || result === "PASSED_RESERVE") {
     await prisma.enrollment.upsert({
       where: { studentId: examResult.studentId },

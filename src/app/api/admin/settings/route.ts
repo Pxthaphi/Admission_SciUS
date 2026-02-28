@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
+import { writeAuditLog } from "@/lib/audit";
 
 export async function GET() {
   const session = await auth();
@@ -31,6 +32,14 @@ export async function PUT(req: NextRequest) {
         update: { value: String(value) },
       });
     }
+    await writeAuditLog({
+      userId: parseInt(session.user.id),
+      userRole: session.user.role,
+      action: "UPDATE_SETTINGS",
+      targetTable: "SystemSetting",
+      targetId: 0,
+      newValue: body,
+    });
   } catch (e) {
     console.error("Settings PUT error:", e);
     return NextResponse.json({ error: "บันทึกไม่สำเร็จ" }, { status: 500 });

@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import {
   LayoutDashboard, Users, FileCheck, ShieldCheck,
-  DoorOpen, Trophy, GraduationCap, LogOut, Menu, X,
+  DoorOpen, Trophy, GraduationCap, LogOut, Menu, X, ScrollText,
 } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
@@ -19,6 +19,7 @@ const menuItems = [
   { href: "/admin/exam-rooms", label: "จัดการห้องสอบ", icon: DoorOpen },
   { href: "/admin/results", label: "ผลการสอบคัดเลือก", icon: Trophy },
   { href: "/admin/enrollment", label: "รายงานตัว/มอบตัว", icon: GraduationCap },
+  { href: "/admin/audit-logs", label: "ประวัติการใช้งาน", icon: ScrollText },
 ];
 
 export function AdminSidebar() {

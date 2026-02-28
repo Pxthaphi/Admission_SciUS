@@ -46,7 +46,7 @@ export async function GET() {
     FAILED: 3,
   };
 
-  const mapped = enrollments.map((e) => ({
+  const mapped = enrollments.map((e: any) => ({
     id: e.id,
     studentId: e.studentId,
     examId: e.student.examId || "-",
@@ -58,6 +58,8 @@ export async function GET() {
     rank: e.student.examResult?.rank || null,
     confirmationStatus: e.confirmationStatus,
     documentReviewStatus: e.documentReviewStatus,
+    documentRemark: e.documentRemark || null,
+    revisionDocTypes: e.revisionDocTypes || [],
     documents: e.student.documents,
   }));
 

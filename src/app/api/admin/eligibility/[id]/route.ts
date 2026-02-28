@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
+import { writeAuditLog } from "@/lib/audit";
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
@@ -11,7 +12,6 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   const { id } = await params;
   const { status, remark } = await req.json();
 
-  // Get the eligibility record to find studentId
   const existing = await prisma.examEligibility.findUnique({
     where: { id: parseInt(id) },
   });
@@ -19,7 +19,6 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  // Step validation: documentReview must be APPROVED before setting eligibility
   if (status === "ELIGIBLE") {
     const docReview = await prisma.documentReview.findUnique({
       where: { studentId: existing.studentId },
@@ -35,6 +34,16 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   const eligibility = await prisma.examEligibility.update({
     where: { id: parseInt(id) },
     data: { status, remark: remark || null, updatedBy: parseInt(session.user.id) },
+  });
+
+  await writeAuditLog({
+    userId: parseInt(session.user.id),
+    userRole: session.user.role,
+    action: "UPDATE_ELIGIBILITY",
+    targetTable: "ExamEligibility",
+    targetId: eligibility.id,
+    oldValue: { status: existing.status, remark: existing.remark },
+    newValue: { status, remark },
   });
 
   return NextResponse.json(eligibility);

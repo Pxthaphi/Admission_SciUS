@@ -1310,6 +1310,8 @@ export const EnrollmentScalarFieldEnum = {
   studentId: 'studentId',
   confirmationStatus: 'confirmationStatus',
   documentReviewStatus: 'documentReviewStatus',
+  documentRemark: 'documentRemark',
+  revisionDocTypes: 'revisionDocTypes',
   reviewedBy: 'reviewedBy',
   confirmedAt: 'confirmedAt',
   createdAt: 'createdAt',

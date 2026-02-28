@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/shared/data-table";
 import { StatusBadge } from "@/components/shared/status-badge";
-import { Settings, Save, Calendar, FileText, Eye, X } from "lucide-react";
+import { Settings, Save, Calendar, FileText, Eye, X, Pencil } from "lucide-react";
 import { toast } from "sonner";
 import { getFileUrl } from "@/lib/utils";
+import { StatusChangeModal } from "@/components/shared/status-change-modal";
 import DatePicker, { registerLocale } from "react-datepicker";
 import { th } from "date-fns/locale";
 
@@ -24,6 +25,8 @@ type EnrollmentRow = {
   rank: number | null;
   confirmationStatus: string;
   documentReviewStatus: string;
+  documentRemark: string | null;
+  revisionDocTypes: string[];
   documents: { type: string; fileUrl: string }[];
 };
 
@@ -43,6 +46,8 @@ export default function EnrollmentPage() {
   const [enrollEnd, setEnrollEnd] = useState<Date | null>(null);
   const [savingSettings, setSavingSettings] = useState(false);
   const [modalRow, setModalRow] = useState<EnrollmentRow | null>(null);
+  const [statusRow, setStatusRow] = useState<EnrollmentRow | null>(null);
+  const [revisionDocs, setRevisionDocs] = useState<string[]>([]);
 
   const fetchData = () => {
     setLoading(true);
@@ -57,6 +62,28 @@ export default function EnrollmentPage() {
   };
 
   useEffect(() => { fetchData(); fetchSettings(); }, []);
+
+  const handleStatusSave = async (status: string, remark: string) => {
+    if (!statusRow) return;
+    const res = await fetch(`/api/admin/enrollment/${statusRow.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        documentReviewStatus: status,
+        remark,
+        revisionDocTypes: status === "REVISION" ? revisionDocs : [],
+      }),
+    });
+    if (res.ok) {
+      toast.success("บันทึกสถานะเอกสารสำเร็จ");
+      setStatusRow(null);
+      setRevisionDocs([]);
+      fetchData();
+    } else {
+      const err = await res.json().catch(() => null);
+      toast.error(err?.error || "บันทึกไม่สำเร็จ");
+    }
+  };
 
   const handleSaveSettings = async () => {
     if (!enrollStart || !enrollEnd) { toast.error("กรุณากรอกวันเริ่มต้นและสิ้นสุด"); return; }
@@ -108,7 +135,20 @@ export default function EnrollmentPage() {
     },
     {
       header: "สถานะเอกสาร",
-      cell: ({ row }) => <StatusBadge status={row.original.documentReviewStatus} />,
+      cell: ({ row }) => (
+        <button
+          onClick={() => {
+            setStatusRow(row.original);
+            setRevisionDocs(row.original.revisionDocTypes || []);
+          }}
+          className="cursor-pointer"
+        >
+          <div className="flex items-center gap-1.5">
+            <StatusBadge status={row.original.documentReviewStatus} />
+            <Pencil className="w-3 h-3 text-[var(--text-secondary)]" />
+          </div>
+        </button>
+      ),
     },
   ];
 
@@ -249,6 +289,26 @@ export default function EnrollmentPage() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Status Change Modal for Document Review */}
+      {statusRow && (
+        <StatusChangeModal
+          title="เปลี่ยนสถานะเอกสารรายงานตัว"
+          subtitle={`${statusRow.firstName} ${statusRow.lastName} (${statusRow.examId})`}
+          currentStatus={statusRow.documentReviewStatus}
+          options={[
+            { value: "PENDING", label: "รอตรวจสอบ", color: "bg-[var(--warning)]" },
+            { value: "REVISION", label: "ต้องแก้ไข", color: "bg-orange-500" },
+            { value: "APPROVED", label: "อนุมัติ", color: "bg-[var(--primary)]" },
+          ]}
+          requireRemark={["REVISION"]}
+          revisionDocTypes={revisionDocs}
+          onRevisionDocTypesChange={setRevisionDocs}
+          docTypeOptions={allEnrollDocTypes.map((t) => ({ value: t, label: docTypeLabel[t] }))}
+          onSave={handleStatusSave}
+          onClose={() => { setStatusRow(null); setRevisionDocs([]); }}
+        />
       )}
     </div>
   );

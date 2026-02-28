@@ -17,7 +17,7 @@ export async function GET() {
     return NextResponse.json({ allowed: false });
   }
 
-  const enrollment = await prisma.enrollment.findUnique({ where: { studentId } });
+  const enrollment = await prisma.enrollment.findUnique({ where: { studentId } }) as any;
   const documents = await prisma.document.findMany({
     where: {
       studentId,
@@ -50,6 +50,8 @@ export async function GET() {
     rank: examResult.rank,
     confirmationStatus: enrollment?.confirmationStatus || "PENDING",
     documentReviewStatus: enrollment?.documentReviewStatus || "PENDING",
+    documentRemark: enrollment?.documentRemark || null,
+    revisionDocTypes: enrollment?.revisionDocTypes || [],
     documents,
     enrollmentStart: settingsMap.enrollment_start || null,
     enrollmentEnd: settingsMap.enrollment_end || null,
