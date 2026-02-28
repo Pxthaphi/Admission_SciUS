@@ -10,7 +10,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   if (!session || session.user.role === "student") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  if (session.user.adminRole !== "SUPER_ADMIN") {
+  if ((session.user as any).adminRole !== "SUPER_ADMIN") {
     return NextResponse.json({ error: "เฉพาะ Super Admin เท่านั้นที่สามารถแก้ไขผู้ใช้ได้" }, { status: 403 });
   }
 
@@ -79,7 +79,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
   if (!session || session.user.role === "student") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  if (session.user.adminRole !== "SUPER_ADMIN") {
+  if ((session.user as any).adminRole !== "SUPER_ADMIN") {
     return NextResponse.json({ error: "เฉพาะ Super Admin เท่านั้นที่สามารถลบผู้ใช้ได้" }, { status: 403 });
   }
 

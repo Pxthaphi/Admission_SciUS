@@ -6,6 +6,7 @@ import { DataTable } from "@/components/shared/data-table";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { Pencil, X } from "lucide-react";
 import { toast } from "sonner";
+import { ExportButtons } from "@/components/shared/export-buttons";
 
 type ResultRow = {
   id: number;
@@ -197,9 +198,12 @@ export default function ResultsPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-xl font-semibold text-[var(--text-primary)]">ผลการสอบคัดเลือก</h1>
-        <p className="text-xs text-[var(--text-secondary)] mt-1">แสดงเฉพาะนักเรียนที่มีสิทธิ์สอบแล้ว</p>
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-xl font-semibold text-[var(--text-primary)]">ผลการสอบคัดเลือก</h1>
+          <p className="text-xs text-[var(--text-secondary)] mt-1">แสดงเฉพาะนักเรียนที่มีสิทธิ์สอบแล้ว</p>
+        </div>
+        <ExportButtons page="results" />
       </div>
       <DataTable columns={columns} data={data} searchPlaceholder="ค้นหาเลขผู้สอบ, ชื่อ, โรงเรียน..." />
 

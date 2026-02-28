@@ -32,7 +32,7 @@ export default function LandingPage() {
       <section className="max-w-6xl mx-auto px-4 py-16 md:py-24">
         <div className="text-center max-w-3xl mx-auto">
           <div className="inline-block px-4 py-1.5 bg-[var(--primary-light)] text-[var(--primary)] rounded-full text-sm font-medium mb-6">
-            รับสมัครนักเรียน ม.4 ปีการศึกษา 2569
+            รับสมัครนักเรียน ม.4
           </div>
           <h2 className="text-3xl md:text-4xl font-bold text-[var(--text-primary)] mb-4 leading-tight">
             ระบบจัดการรับสมัครนักเรียน

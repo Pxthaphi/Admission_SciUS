@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
   if (!session || session.user.role === "student") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  if (session.user.adminRole !== "SUPER_ADMIN") {
+  if ((session.user as any).adminRole !== "SUPER_ADMIN") {
     return NextResponse.json({ error: "เฉพาะ Super Admin เท่านั้นที่สามารถเพิ่มผู้ใช้ได้" }, { status: 403 });
   }
 

@@ -6,6 +6,7 @@ import { DataTable } from "@/components/shared/data-table";
 import { StatusBadge } from "@/components/shared/status-badge";
 import { Settings, Save, Calendar, FileText, Eye, X, Pencil } from "lucide-react";
 import { toast } from "sonner";
+import { ExportButtons } from "@/components/shared/export-buttons";
 import { getFileUrl } from "@/lib/utils";
 import { StatusChangeModal } from "@/components/shared/status-change-modal";
 import DatePicker, { registerLocale } from "react-datepicker";
@@ -175,13 +176,16 @@ export default function EnrollmentPage() {
           <h1 className="text-xl font-semibold text-[var(--text-primary)]">รายงานตัวและมอบตัว</h1>
           <p className="text-xs text-[var(--text-secondary)] mt-1">แสดงเฉพาะนักเรียนที่ผ่านการสอบคัดเลือกแล้ว</p>
         </div>
-        <button
-          onClick={() => setShowSettings(!showSettings)}
-          className="flex items-center gap-1.5 px-3 py-2 bg-white border border-[var(--border)] text-[var(--text-secondary)] rounded-lg text-xs font-medium hover:bg-gray-50 transition-colors"
-        >
-          <Settings className="w-3.5 h-3.5" />
-          ตั้งค่าช่วงเวลา
-        </button>
+        <div className="flex items-center gap-2">
+          <ExportButtons page="enrollment" />
+          <button
+            onClick={() => setShowSettings(!showSettings)}
+            className="flex items-center gap-1.5 px-3 py-2 bg-white border border-[var(--border)] text-[var(--text-secondary)] rounded-lg text-xs font-medium hover:bg-gray-50 transition-colors"
+          >
+            <Settings className="w-3.5 h-3.5" />
+            ตั้งค่าช่วงเวลา
+          </button>
+        </div>
       </div>
 
       {/* Period info */}

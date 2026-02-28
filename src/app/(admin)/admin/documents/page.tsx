@@ -9,6 +9,7 @@ import { CheckCircle, FileText, Eye, X, Pencil } from "lucide-react";
 import Swal from "sweetalert2";
 import { toast } from "sonner";
 import { getFileUrl } from "@/lib/utils";
+import { ExportButtons } from "@/components/shared/export-buttons";
 
 type DocRow = {
   id: number;
@@ -158,9 +159,12 @@ export default function DocumentsPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-xl font-semibold text-[var(--text-primary)]">ตรวจสอบเอกสาร</h1>
-        <button onClick={handleBatchApprove} className="flex items-center gap-1.5 px-3 py-2 bg-[var(--primary)] text-white rounded-lg text-xs font-medium hover:bg-[var(--primary-hover)] transition-colors">
-          <CheckCircle className="w-3.5 h-3.5" />อนุมัติทั้งหมดที่รอ
-        </button>
+        <div className="flex items-center gap-2">
+          <ExportButtons page="documents" />
+          <button onClick={handleBatchApprove} className="flex items-center gap-1.5 px-3 py-2 bg-[var(--primary)] text-white rounded-lg text-xs font-medium hover:bg-[var(--primary-hover)] transition-colors">
+            <CheckCircle className="w-3.5 h-3.5" />อนุมัติทั้งหมดที่รอ
+          </button>
+        </div>
       </div>
       <DataTable columns={columns} data={data} searchPlaceholder="ค้นหาเลขผู้สอบ, ชื่อ, โรงเรียน..." />
 

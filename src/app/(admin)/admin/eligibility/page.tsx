@@ -8,6 +8,7 @@ import { StatusChangeModal } from "@/components/shared/status-change-modal";
 import { CheckCircle, XCircle, Pencil } from "lucide-react";
 import Swal from "sweetalert2";
 import { toast } from "sonner";
+import { ExportButtons } from "@/components/shared/export-buttons";
 
 type EligibilityRow = {
   id: number;
@@ -126,6 +127,7 @@ export default function EligibilityPage() {
           <p className="text-xs text-[var(--text-secondary)] mt-1">แสดงเฉพาะนักเรียนที่เอกสารผ่านการตรวจสอบแล้ว</p>
         </div>
         <div className="flex gap-2">
+          <ExportButtons page="eligibility" />
           <button onClick={() => handleBatchUpdate("ELIGIBLE")} className="flex items-center gap-1.5 px-3 py-2 bg-[var(--primary)] text-white rounded-lg text-xs font-medium hover:bg-[var(--primary-hover)] transition-colors">
             <CheckCircle className="w-3.5 h-3.5" />อนุมัติทั้งหมดที่รอ
           </button>
