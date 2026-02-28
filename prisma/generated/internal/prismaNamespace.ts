@@ -1255,6 +1255,7 @@ export const DocumentReviewScalarFieldEnum = {
   studentId: 'studentId',
   status: 'status',
   remark: 'remark',
+  revisionDocTypes: 'revisionDocTypes',
   reviewedBy: 'reviewedBy',
   reviewedAt: 'reviewedAt',
   createdAt: 'createdAt',

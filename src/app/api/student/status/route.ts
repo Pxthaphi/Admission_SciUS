@@ -11,7 +11,7 @@ export async function GET() {
   const studentId = parseInt(session.user.id);
 
   const [docReview, eligibility, examResult, documents] = await Promise.all([
-    prisma.documentReview.findUnique({ where: { studentId } }),
+    prisma.documentReview.findUnique({ where: { studentId } }) as any,
     prisma.examEligibility.findUnique({ where: { studentId } }),
     prisma.examResult.findUnique({ where: { studentId } }),
     prisma.document.findMany({ where: { studentId }, select: { type: true } }),
@@ -22,6 +22,7 @@ export async function GET() {
   return NextResponse.json({
     documentReview: docReview?.status || "PENDING",
     documentReviewRemark: docReview?.remark || null,
+    revisionDocTypes: docReview?.revisionDocTypes || [],
     eligibility: eligibility?.status || "PENDING",
     eligibilityRemark: eligibility?.remark || null,
     examResult: examResult?.result || "PENDING",

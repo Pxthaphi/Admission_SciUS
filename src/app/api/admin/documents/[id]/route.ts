@@ -9,16 +9,17 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   }
 
   const { id } = await params;
-  const { status, remark } = await req.json();
+  const { status, remark, revisionDocTypes } = await req.json();
 
   const review = await prisma.documentReview.update({
     where: { id: parseInt(id) },
     data: {
       status,
       remark: remark || null,
+      revisionDocTypes: status === "REVISION" ? (revisionDocTypes || []) : [],
       reviewedBy: parseInt(session.user.id),
       reviewedAt: new Date(),
-    },
+    } as any,
   });
 
   return NextResponse.json(review);

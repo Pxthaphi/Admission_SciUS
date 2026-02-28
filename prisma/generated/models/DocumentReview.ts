@@ -65,6 +65,7 @@ export type DocumentReviewCountAggregateOutputType = {
   studentId: number
   status: number
   remark: number
+  revisionDocTypes: number
   reviewedBy: number
   reviewedAt: number
   createdAt: number
@@ -112,6 +113,7 @@ export type DocumentReviewCountAggregateInputType = {
   studentId?: true
   status?: true
   remark?: true
+  revisionDocTypes?: true
   reviewedBy?: true
   reviewedAt?: true
   createdAt?: true
@@ -210,6 +212,7 @@ export type DocumentReviewGroupByOutputType = {
   studentId: number
   status: $Enums.ReviewStatus
   remark: string | null
+  revisionDocTypes: string[]
   reviewedBy: number | null
   reviewedAt: Date | null
   createdAt: Date
@@ -244,6 +247,7 @@ export type DocumentReviewWhereInput = {
   studentId?: Prisma.IntFilter<"DocumentReview"> | number
   status?: Prisma.EnumReviewStatusFilter<"DocumentReview"> | $Enums.ReviewStatus
   remark?: Prisma.StringNullableFilter<"DocumentReview"> | string | null
+  revisionDocTypes?: Prisma.StringNullableListFilter<"DocumentReview">
   reviewedBy?: Prisma.IntNullableFilter<"DocumentReview"> | number | null
   reviewedAt?: Prisma.DateTimeNullableFilter<"DocumentReview"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"DocumentReview"> | Date | string
@@ -257,6 +261,7 @@ export type DocumentReviewOrderByWithRelationInput = {
   studentId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   remark?: Prisma.SortOrderInput | Prisma.SortOrder
+  revisionDocTypes?: Prisma.SortOrder
   reviewedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   reviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -273,6 +278,7 @@ export type DocumentReviewWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.DocumentReviewWhereInput | Prisma.DocumentReviewWhereInput[]
   status?: Prisma.EnumReviewStatusFilter<"DocumentReview"> | $Enums.ReviewStatus
   remark?: Prisma.StringNullableFilter<"DocumentReview"> | string | null
+  revisionDocTypes?: Prisma.StringNullableListFilter<"DocumentReview">
   reviewedBy?: Prisma.IntNullableFilter<"DocumentReview"> | number | null
   reviewedAt?: Prisma.DateTimeNullableFilter<"DocumentReview"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"DocumentReview"> | Date | string
@@ -286,6 +292,7 @@ export type DocumentReviewOrderByWithAggregationInput = {
   studentId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   remark?: Prisma.SortOrderInput | Prisma.SortOrder
+  revisionDocTypes?: Prisma.SortOrder
   reviewedBy?: Prisma.SortOrderInput | Prisma.SortOrder
   reviewedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -305,6 +312,7 @@ export type DocumentReviewScalarWhereWithAggregatesInput = {
   studentId?: Prisma.IntWithAggregatesFilter<"DocumentReview"> | number
   status?: Prisma.EnumReviewStatusWithAggregatesFilter<"DocumentReview"> | $Enums.ReviewStatus
   remark?: Prisma.StringNullableWithAggregatesFilter<"DocumentReview"> | string | null
+  revisionDocTypes?: Prisma.StringNullableListFilter<"DocumentReview">
   reviewedBy?: Prisma.IntNullableWithAggregatesFilter<"DocumentReview"> | number | null
   reviewedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"DocumentReview"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"DocumentReview"> | Date | string
@@ -314,6 +322,7 @@ export type DocumentReviewScalarWhereWithAggregatesInput = {
 export type DocumentReviewCreateInput = {
   status?: $Enums.ReviewStatus
   remark?: string | null
+  revisionDocTypes?: Prisma.DocumentReviewCreaterevisionDocTypesInput | string[]
   reviewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -326,6 +335,7 @@ export type DocumentReviewUncheckedCreateInput = {
   studentId: number
   status?: $Enums.ReviewStatus
   remark?: string | null
+  revisionDocTypes?: Prisma.DocumentReviewCreaterevisionDocTypesInput | string[]
   reviewedBy?: number | null
   reviewedAt?: Date | string | null
   createdAt?: Date | string
@@ -335,6 +345,7 @@ export type DocumentReviewUncheckedCreateInput = {
 export type DocumentReviewUpdateInput = {
   status?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
   remark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  revisionDocTypes?: Prisma.DocumentReviewUpdaterevisionDocTypesInput | string[]
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -347,6 +358,7 @@ export type DocumentReviewUncheckedUpdateInput = {
   studentId?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
   remark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  revisionDocTypes?: Prisma.DocumentReviewUpdaterevisionDocTypesInput | string[]
   reviewedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -358,6 +370,7 @@ export type DocumentReviewCreateManyInput = {
   studentId: number
   status?: $Enums.ReviewStatus
   remark?: string | null
+  revisionDocTypes?: Prisma.DocumentReviewCreaterevisionDocTypesInput | string[]
   reviewedBy?: number | null
   reviewedAt?: Date | string | null
   createdAt?: Date | string
@@ -367,6 +380,7 @@ export type DocumentReviewCreateManyInput = {
 export type DocumentReviewUpdateManyMutationInput = {
   status?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
   remark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  revisionDocTypes?: Prisma.DocumentReviewUpdaterevisionDocTypesInput | string[]
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -377,6 +391,7 @@ export type DocumentReviewUncheckedUpdateManyInput = {
   studentId?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
   remark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  revisionDocTypes?: Prisma.DocumentReviewUpdaterevisionDocTypesInput | string[]
   reviewedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -398,11 +413,20 @@ export type DocumentReviewNullableScalarRelationFilter = {
   isNot?: Prisma.DocumentReviewWhereInput | null
 }
 
+export type StringNullableListFilter<$PrismaModel = never> = {
+  equals?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel> | null
+  has?: string | Prisma.StringFieldRefInput<$PrismaModel> | null
+  hasEvery?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  hasSome?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
+  isEmpty?: boolean
+}
+
 export type DocumentReviewCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   status?: Prisma.SortOrder
   remark?: Prisma.SortOrder
+  revisionDocTypes?: Prisma.SortOrder
   reviewedBy?: Prisma.SortOrder
   reviewedAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -517,8 +541,17 @@ export type DocumentReviewUncheckedUpdateOneWithoutStudentNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.DocumentReviewUpdateToOneWithWhereWithoutStudentInput, Prisma.DocumentReviewUpdateWithoutStudentInput>, Prisma.DocumentReviewUncheckedUpdateWithoutStudentInput>
 }
 
+export type DocumentReviewCreaterevisionDocTypesInput = {
+  set: string[]
+}
+
 export type EnumReviewStatusFieldUpdateOperationsInput = {
   set?: $Enums.ReviewStatus
+}
+
+export type DocumentReviewUpdaterevisionDocTypesInput = {
+  set?: string[]
+  push?: string | string[]
 }
 
 export type NullableIntFieldUpdateOperationsInput = {
@@ -532,6 +565,7 @@ export type NullableIntFieldUpdateOperationsInput = {
 export type DocumentReviewCreateWithoutReviewerInput = {
   status?: $Enums.ReviewStatus
   remark?: string | null
+  revisionDocTypes?: Prisma.DocumentReviewCreaterevisionDocTypesInput | string[]
   reviewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -543,6 +577,7 @@ export type DocumentReviewUncheckedCreateWithoutReviewerInput = {
   studentId: number
   status?: $Enums.ReviewStatus
   remark?: string | null
+  revisionDocTypes?: Prisma.DocumentReviewCreaterevisionDocTypesInput | string[]
   reviewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -582,6 +617,7 @@ export type DocumentReviewScalarWhereInput = {
   studentId?: Prisma.IntFilter<"DocumentReview"> | number
   status?: Prisma.EnumReviewStatusFilter<"DocumentReview"> | $Enums.ReviewStatus
   remark?: Prisma.StringNullableFilter<"DocumentReview"> | string | null
+  revisionDocTypes?: Prisma.StringNullableListFilter<"DocumentReview">
   reviewedBy?: Prisma.IntNullableFilter<"DocumentReview"> | number | null
   reviewedAt?: Prisma.DateTimeNullableFilter<"DocumentReview"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"DocumentReview"> | Date | string
@@ -591,6 +627,7 @@ export type DocumentReviewScalarWhereInput = {
 export type DocumentReviewCreateWithoutStudentInput = {
   status?: $Enums.ReviewStatus
   remark?: string | null
+  revisionDocTypes?: Prisma.DocumentReviewCreaterevisionDocTypesInput | string[]
   reviewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -601,6 +638,7 @@ export type DocumentReviewUncheckedCreateWithoutStudentInput = {
   id?: number
   status?: $Enums.ReviewStatus
   remark?: string | null
+  revisionDocTypes?: Prisma.DocumentReviewCreaterevisionDocTypesInput | string[]
   reviewedBy?: number | null
   reviewedAt?: Date | string | null
   createdAt?: Date | string
@@ -626,6 +664,7 @@ export type DocumentReviewUpdateToOneWithWhereWithoutStudentInput = {
 export type DocumentReviewUpdateWithoutStudentInput = {
   status?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
   remark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  revisionDocTypes?: Prisma.DocumentReviewUpdaterevisionDocTypesInput | string[]
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -636,6 +675,7 @@ export type DocumentReviewUncheckedUpdateWithoutStudentInput = {
   id?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
   remark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  revisionDocTypes?: Prisma.DocumentReviewUpdaterevisionDocTypesInput | string[]
   reviewedBy?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -647,6 +687,7 @@ export type DocumentReviewCreateManyReviewerInput = {
   studentId: number
   status?: $Enums.ReviewStatus
   remark?: string | null
+  revisionDocTypes?: Prisma.DocumentReviewCreaterevisionDocTypesInput | string[]
   reviewedAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -655,6 +696,7 @@ export type DocumentReviewCreateManyReviewerInput = {
 export type DocumentReviewUpdateWithoutReviewerInput = {
   status?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
   remark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  revisionDocTypes?: Prisma.DocumentReviewUpdaterevisionDocTypesInput | string[]
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -666,6 +708,7 @@ export type DocumentReviewUncheckedUpdateWithoutReviewerInput = {
   studentId?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
   remark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  revisionDocTypes?: Prisma.DocumentReviewUpdaterevisionDocTypesInput | string[]
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -676,6 +719,7 @@ export type DocumentReviewUncheckedUpdateManyWithoutReviewerInput = {
   studentId?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumReviewStatusFieldUpdateOperationsInput | $Enums.ReviewStatus
   remark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  revisionDocTypes?: Prisma.DocumentReviewUpdaterevisionDocTypesInput | string[]
   reviewedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -688,6 +732,7 @@ export type DocumentReviewSelect<ExtArgs extends runtime.Types.Extensions.Intern
   studentId?: boolean
   status?: boolean
   remark?: boolean
+  revisionDocTypes?: boolean
   reviewedBy?: boolean
   reviewedAt?: boolean
   createdAt?: boolean
@@ -701,6 +746,7 @@ export type DocumentReviewSelectCreateManyAndReturn<ExtArgs extends runtime.Type
   studentId?: boolean
   status?: boolean
   remark?: boolean
+  revisionDocTypes?: boolean
   reviewedBy?: boolean
   reviewedAt?: boolean
   createdAt?: boolean
@@ -714,6 +760,7 @@ export type DocumentReviewSelectUpdateManyAndReturn<ExtArgs extends runtime.Type
   studentId?: boolean
   status?: boolean
   remark?: boolean
+  revisionDocTypes?: boolean
   reviewedBy?: boolean
   reviewedAt?: boolean
   createdAt?: boolean
@@ -727,13 +774,14 @@ export type DocumentReviewSelectScalar = {
   studentId?: boolean
   status?: boolean
   remark?: boolean
+  revisionDocTypes?: boolean
   reviewedBy?: boolean
   reviewedAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type DocumentReviewOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "status" | "remark" | "reviewedBy" | "reviewedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["documentReview"]>
+export type DocumentReviewOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "studentId" | "status" | "remark" | "revisionDocTypes" | "reviewedBy" | "reviewedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["documentReview"]>
 export type DocumentReviewInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   student?: boolean | Prisma.StudentDefaultArgs<ExtArgs>
   reviewer?: boolean | Prisma.DocumentReview$reviewerArgs<ExtArgs>
@@ -758,6 +806,7 @@ export type $DocumentReviewPayload<ExtArgs extends runtime.Types.Extensions.Inte
     studentId: number
     status: $Enums.ReviewStatus
     remark: string | null
+    revisionDocTypes: string[]
     reviewedBy: number | null
     reviewedAt: Date | null
     createdAt: Date
@@ -1191,6 +1240,7 @@ export interface DocumentReviewFieldRefs {
   readonly studentId: Prisma.FieldRef<"DocumentReview", 'Int'>
   readonly status: Prisma.FieldRef<"DocumentReview", 'ReviewStatus'>
   readonly remark: Prisma.FieldRef<"DocumentReview", 'String'>
+  readonly revisionDocTypes: Prisma.FieldRef<"DocumentReview", 'String[]'>
   readonly reviewedBy: Prisma.FieldRef<"DocumentReview", 'Int'>
   readonly reviewedAt: Prisma.FieldRef<"DocumentReview", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"DocumentReview", 'DateTime'>

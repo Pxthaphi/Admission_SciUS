@@ -6,7 +6,12 @@ import { X } from "lucide-react";
 type StatusOption = {
   value: string;
   label: string;
-  color: string; // tailwind bg class
+  color: string;
+};
+
+type DocTypeOption = {
+  value: string;
+  label: string;
 };
 
 type Props = {
@@ -14,16 +19,34 @@ type Props = {
   subtitle?: string;
   currentStatus: string;
   options: StatusOption[];
-  requireRemark?: string[]; // status values that require remark
+  requireRemark?: string[];
   onSave: (status: string, remark: string) => void;
   onClose: () => void;
-  children?: React.ReactNode; // extra fields like rank input
+  children?: React.ReactNode;
+  // Document revision selection
+  revisionDocTypes?: string[];
+  onRevisionDocTypesChange?: (types: string[]) => void;
+  docTypeOptions?: DocTypeOption[];
 };
 
-export function StatusChangeModal({ title, subtitle, currentStatus, options, requireRemark = [], onSave, onClose, children }: Props) {
+export function StatusChangeModal({
+  title, subtitle, currentStatus, options, requireRemark = [],
+  onSave, onClose, children,
+  revisionDocTypes, onRevisionDocTypesChange, docTypeOptions,
+}: Props) {
   const [selected, setSelected] = useState(currentStatus);
   const [remark, setRemark] = useState("");
   const needsRemark = requireRemark.includes(selected);
+  const showDocSelection = needsRemark && docTypeOptions && docTypeOptions.length > 0;
+
+  const toggleDocType = (type: string) => {
+    if (!onRevisionDocTypesChange || !revisionDocTypes) return;
+    if (revisionDocTypes.includes(type)) {
+      onRevisionDocTypesChange(revisionDocTypes.filter((t) => t !== type));
+    } else {
+      onRevisionDocTypesChange([...revisionDocTypes, type]);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40" onClick={onClose}>
@@ -63,6 +86,30 @@ export function StatusChangeModal({ title, subtitle, currentStatus, options, req
           {/* Extra children (e.g. rank input) */}
           {children}
 
+          {/* Document type selection for REVISION */}
+          {showDocSelection && (
+            <div>
+              <label className="block text-xs font-medium text-[var(--text-primary)] mb-2">เลือกเอกสารที่ต้องแก้ไข <span className="text-red-400">*</span></label>
+              <div className="space-y-2">
+                {docTypeOptions.map((doc) => (
+                  <label key={doc.value} className={`flex items-center gap-3 px-4 py-2.5 rounded-xl border text-sm cursor-pointer transition-all ${
+                    revisionDocTypes?.includes(doc.value)
+                      ? "border-orange-300 bg-orange-50 text-orange-700"
+                      : "border-gray-200 bg-white text-[var(--text-primary)] hover:border-gray-300"
+                  }`}>
+                    <input
+                      type="checkbox"
+                      checked={revisionDocTypes?.includes(doc.value) || false}
+                      onChange={() => toggleDocType(doc.value)}
+                      className="w-4 h-4 rounded border-gray-300 text-orange-500 focus:ring-orange-500"
+                    />
+                    {doc.label}
+                  </label>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Remark field */}
           {needsRemark && (
             <div>
@@ -98,7 +145,7 @@ export function StatusChangeModal({ title, subtitle, currentStatus, options, req
           </button>
           <button
             onClick={() => onSave(selected, remark)}
-            disabled={selected === currentStatus || (needsRemark && !remark.trim())}
+            disabled={selected === currentStatus || (needsRemark && !remark.trim()) || (showDocSelection && (!revisionDocTypes || revisionDocTypes.length === 0))}
             className="flex-1 py-2.5 bg-[var(--primary)] text-white rounded-xl text-sm font-medium hover:bg-[var(--primary-hover)] transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
           >
             บันทึก

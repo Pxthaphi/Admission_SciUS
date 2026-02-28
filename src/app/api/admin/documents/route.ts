@@ -17,7 +17,7 @@ export async function GET() {
     orderBy: { student: { examId: "asc" } },
   });
 
-  const data = reviews.map((r) => ({
+  const data = reviews.map((r: any) => ({
     id: r.id,
     studentId: r.studentId,
     examId: r.student.examId || "-",
@@ -27,6 +27,7 @@ export async function GET() {
     province: r.student.province || "-",
     status: r.status,
     remark: r.remark,
+    revisionDocTypes: r.revisionDocTypes || [],
     documents: r.student.documents,
   }));
 

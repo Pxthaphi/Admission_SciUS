@@ -20,6 +20,7 @@ type DocRow = {
   province: string;
   status: string;
   remark: string | null;
+  revisionDocTypes: string[];
   documents: { type: string; fileUrl: string }[];
 };
 
@@ -41,6 +42,7 @@ export default function DocumentsPage() {
   const [loading, setLoading] = useState(true);
   const [modalRow, setModalRow] = useState<DocRow | null>(null);
   const [statusModalRow, setStatusModalRow] = useState<DocRow | null>(null);
+  const [revisionDocs, setRevisionDocs] = useState<string[]>([]);
 
   const fetchData = () => {
     setLoading(true);
@@ -54,12 +56,13 @@ export default function DocumentsPage() {
     const res = await fetch(`/api/admin/documents/${statusModalRow.id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status, remark }),
+      body: JSON.stringify({ status, remark, revisionDocTypes: status === "REVISION" ? revisionDocs : [] }),
     });
     if (res.ok) {
       toast.success("บันทึกสำเร็จ");
-      setData((prev) => prev.map((r) => (r.id === statusModalRow.id ? { ...r, status, remark } : r)));
+      setData((prev) => prev.map((r) => (r.id === statusModalRow.id ? { ...r, status, remark, revisionDocTypes: status === "REVISION" ? revisionDocs : [] } : r)));
       setStatusModalRow(null);
+      setRevisionDocs([]);
     } else toast.error("บันทึกไม่สำเร็จ");
   };
 
@@ -215,7 +218,10 @@ export default function DocumentsPage() {
           options={docStatusOptions}
           requireRemark={["REVISION"]}
           onSave={handleStatusSave}
-          onClose={() => setStatusModalRow(null)}
+          onClose={() => { setStatusModalRow(null); setRevisionDocs([]); }}
+          revisionDocTypes={revisionDocs}
+          onRevisionDocTypesChange={setRevisionDocs}
+          docTypeOptions={allDocTypes.map((t) => ({ value: t, label: docTypeLabel[t] }))}
         />
       )}
     </div>

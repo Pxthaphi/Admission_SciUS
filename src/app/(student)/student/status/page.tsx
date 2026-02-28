@@ -12,6 +12,7 @@ const REQUIRED_DOCS = ["INTENT_CONFIRM", "FEE_PAYMENT"];
 type StatusData = {
   documentReview: string;
   documentReviewRemark: string | null;
+  revisionDocTypes: string[];
   eligibility: string;
   eligibilityRemark: string | null;
   examResult: string;
@@ -57,9 +58,12 @@ function resolveSteps(data: StatusData) {
   if (docStatus === "APPROVED") {
     steps.push({ ...stepsConfig[1], state: "complete", statusLabel: "เอกสารผ่านการตรวจสอบ", variant: "success" });
   } else if (docStatus === "REVISION") {
+    const revDocLabels: Record<string, string> = { INTENT_CONFIRM: "แจ้งความจำนง", FEE_PAYMENT: "ชำระค่าธรรมเนียม" };
+    const revDocs = (data.revisionDocTypes || []).map((t: string) => revDocLabels[t] || t);
+    const revisionDetail = revDocs.length > 0 ? `เอกสารที่ต้องแก้ไข: ${revDocs.join(", ")}` : null;
     steps.push({
       ...stepsConfig[1], state: "active", statusLabel: "เอกสารต้องแก้ไข กรุณาอัปโหลดใหม่", variant: "danger",
-      remark: data.documentReviewRemark,
+      remark: [data.documentReviewRemark, revisionDetail].filter(Boolean).join("\n"),
       action: { href: "/student/profile", label: "ไปแก้ไขเอกสาร" },
     });
     return steps;

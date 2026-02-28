@@ -123,6 +123,7 @@ model DocumentReview {
   studentId  Int          @unique
   status     ReviewStatus @default(PENDING)
   remark     String?
+  revisionDocTypes String[] @default([])  // document types that need revision
   reviewedBy Int?
   reviewedAt DateTime?
   createdAt  DateTime     @default(now())
