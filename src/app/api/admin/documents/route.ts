@@ -14,7 +14,7 @@ export async function GET() {
         include: { documents: { select: { type: true, fileUrl: true } } },
       },
     },
-    orderBy: { createdAt: "desc" },
+    orderBy: { student: { examId: "asc" } },
   });
 
   const data = reviews.map((r) => ({

@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
   const type = req.nextUrl.searchParams.get("type") || "student";
 
   if (type === "student") {
-    const students = await prisma.student.findMany({ orderBy: { id: "desc" } });
+    const students = await prisma.student.findMany({ orderBy: { examId: "asc" } });
     return NextResponse.json(students);
   } else {
     const admins = await prisma.admin.findMany({
