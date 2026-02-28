@@ -39,20 +39,34 @@ export async function GET() {
     orderBy: { student: { examId: "asc" } },
   });
 
-  return NextResponse.json(
-    enrollments.map((e) => ({
-      id: e.id,
-      studentId: e.studentId,
-      examId: e.student.examId || "-",
-      firstName: e.student.firstName,
-      lastName: e.student.lastName,
-      school: e.student.school || "-",
-      province: e.student.province || "-",
-      result: e.student.examResult?.result || "PENDING",
-      rank: e.student.examResult?.rank || null,
-      confirmationStatus: e.confirmationStatus,
-      documentReviewStatus: e.documentReviewStatus,
-      documents: e.student.documents,
-    }))
-  );
+  const resultOrder: Record<string, number> = {
+    PASSED_PRIMARY: 0,
+    PASSED_RESERVE: 1,
+    PENDING: 2,
+    FAILED: 3,
+  };
+
+  const mapped = enrollments.map((e) => ({
+    id: e.id,
+    studentId: e.studentId,
+    examId: e.student.examId || "-",
+    firstName: e.student.firstName,
+    lastName: e.student.lastName,
+    school: e.student.school || "-",
+    province: e.student.province || "-",
+    result: e.student.examResult?.result || "PENDING",
+    rank: e.student.examResult?.rank || null,
+    confirmationStatus: e.confirmationStatus,
+    documentReviewStatus: e.documentReviewStatus,
+    documents: e.student.documents,
+  }));
+
+  mapped.sort((a, b) => {
+    const oa = resultOrder[a.result] ?? 9;
+    const ob = resultOrder[b.result] ?? 9;
+    if (oa !== ob) return oa - ob;
+    return (a.rank ?? 9999) - (b.rank ?? 9999);
+  });
+
+  return NextResponse.json(mapped);
 }
