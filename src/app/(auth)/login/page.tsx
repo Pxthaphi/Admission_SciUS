@@ -19,6 +19,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const triggerWelcome = useWelcomeStore((s) => s.trigger);
+  const welcomeActive = useWelcomeStore((s) => s.show);
 
   const { register, handleSubmit, watch, formState: { errors } } = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
@@ -93,7 +94,7 @@ export default function LoginPage() {
       </div>
 
       {/* Card */}
-      <div className="relative z-10 w-full max-w-[860px] bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/60 grid grid-cols-1 md:grid-cols-2 overflow-hidden">
+      <div className={`relative z-10 w-full max-w-[860px] bg-white/80 backdrop-blur-xl rounded-2xl shadow-lg border border-white/60 grid grid-cols-1 md:grid-cols-2 overflow-hidden transition-all duration-500 ${welcomeActive ? "opacity-0 scale-95" : "opacity-100 scale-100"}`}>
 
         {/* Left - Branding */}
         <div className="flex flex-col items-center justify-center text-center p-6 md:p-10 bg-gradient-to-b from-white/60 to-white/30 md:h-full">

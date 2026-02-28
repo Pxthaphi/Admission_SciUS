@@ -22,6 +22,25 @@ export async function GET() {
     (r) => r.student.examEligibility?.status === "ELIGIBLE"
   );
 
+  // Sort: PASSED_PRIMARY (by rank) > PASSED_RESERVE (by rank) > FAILED (by examId)
+  const resultOrder: Record<string, number> = {
+    PASSED_PRIMARY: 0,
+    PASSED_RESERVE: 1,
+    PENDING: 2,
+    FAILED: 3,
+  };
+
+  filtered.sort((a, b) => {
+    const orderA = resultOrder[a.result] ?? 99;
+    const orderB = resultOrder[b.result] ?? 99;
+    if (orderA !== orderB) return orderA - orderB;
+    // Same result group — sort by rank if available, then examId
+    if (a.rank != null && b.rank != null) return a.rank - b.rank;
+    if (a.rank != null) return -1;
+    if (b.rank != null) return 1;
+    return (a.student.examId || "").localeCompare(b.student.examId || "");
+  });
+
   return NextResponse.json(
     filtered.map((r) => ({
       id: r.id,
