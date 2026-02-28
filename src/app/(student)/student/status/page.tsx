@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
+import confetti from "canvas-confetti";
 import {
   Upload, FileSearch, ShieldCheck, Trophy,
-  CheckCircle, Clock, AlertCircle, ArrowRight, Lock, X, Bell,
+  CheckCircle, Clock, AlertCircle, ArrowRight, Lock, X, Bell, PartyPopper,
 } from "lucide-react";
 
 const REQUIRED_DOCS = ["INTENT_CONFIRM", "FEE_PAYMENT"];
@@ -136,12 +137,46 @@ export default function StatusPage() {
   const [showModal, setShowModal] = useState(false);
   const [notification, setNotification] = useState<ReturnType<typeof getLatestUpdate>>(null);
 
+  const fireConfetti = useCallback(() => {
+    const duration = 3000;
+    const end = Date.now() + duration;
+    const colors = ["#22c55e", "#3b82f6", "#f59e0b", "#ec4899", "#8b5cf6"];
+
+    const frame = () => {
+      confetti({
+        particleCount: 3,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0, y: 0.7 },
+        colors,
+      });
+      confetti({
+        particleCount: 3,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1, y: 0.7 },
+        colors,
+      });
+      if (Date.now() < end) requestAnimationFrame(frame);
+    };
+    frame();
+
+    // Big burst
+    setTimeout(() => {
+      confetti({
+        particleCount: 100,
+        spread: 100,
+        origin: { x: 0.5, y: 0.5 },
+        colors,
+      });
+    }, 300);
+  }, []);
+
   useEffect(() => {
     fetch("/api/student/status")
       .then((r) => r.json())
       .then((d: StatusData) => {
         setData(d);
-        // Check if there's a new status to show
         const update = getLatestUpdate(d);
         if (update) {
           const seenKey = `status_seen_${update.title}`;
@@ -149,11 +184,15 @@ export default function StatusPage() {
             setNotification(update);
             setShowModal(true);
             sessionStorage.setItem(seenKey, "1");
+            // Fire confetti for passed students
+            if (d.examResult === "PASSED_PRIMARY" || d.examResult === "PASSED_RESERVE") {
+              setTimeout(() => fireConfetti(), 400);
+            }
           }
         }
       })
       .finally(() => setLoading(false));
-  }, []);
+  }, [fireConfetti]);
 
   if (loading) return (
     <div className="flex justify-center py-12">
@@ -261,27 +300,55 @@ export default function StatusPage() {
       {showModal && notification && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
           <div className="bg-white rounded-2xl shadow-xl max-w-sm w-full mx-4 overflow-hidden">
-            <div className={`p-6 text-center ${
-              notification.variant === "success" ? "bg-[var(--primary-light)]"
-              : notification.variant === "danger" ? "bg-[var(--danger-light)]"
-              : "bg-[var(--secondary-light)]"
-            }`}>
-              <Bell className={`w-10 h-10 mx-auto mb-3 ${
-                notification.variant === "success" ? "text-[var(--primary)]"
-                : notification.variant === "danger" ? "text-[var(--danger)]"
-                : "text-[var(--secondary)]"
-              }`} />
-              <h3 className="text-lg font-semibold text-[var(--text-primary)]">{notification.title}</h3>
-              <p className="text-sm text-[var(--text-secondary)] mt-1">{notification.message}</p>
-            </div>
-            <div className="p-4">
-              <button
-                onClick={() => setShowModal(false)}
-                className="w-full py-2.5 bg-[var(--primary)] text-white rounded-lg text-sm font-medium hover:bg-[var(--primary-hover)] transition-colors"
-              >
-                รับทราบ
-              </button>
-            </div>
+            {data.examResult === "PASSED_PRIMARY" || data.examResult === "PASSED_RESERVE" ? (
+              /* Congratulations modal for passed students */
+              <>
+                <div className="p-8 text-center bg-gradient-to-b from-green-50 to-emerald-50">
+                  <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
+                    <PartyPopper className="w-8 h-8 text-green-600" />
+                  </div>
+                  <h3 className="text-xl font-bold text-[var(--text-primary)]">🎉 ยินดีด้วย!</h3>
+                  <p className="text-base font-semibold text-green-700 mt-2">{notification.title}</p>
+                  <p className="text-sm text-[var(--text-secondary)] mt-2">{notification.message}</p>
+                  <p className="text-xs text-green-600 mt-3 bg-green-100 inline-block px-3 py-1 rounded-full">
+                    ขอแสดงความยินดีที่ผ่านการคัดเลือก
+                  </p>
+                </div>
+                <div className="p-4">
+                  <button
+                    onClick={() => setShowModal(false)}
+                    className="w-full py-2.5 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700 transition-colors"
+                  >
+                    🎊 รับทราบ
+                  </button>
+                </div>
+              </>
+            ) : (
+              /* Normal notification modal */
+              <>
+                <div className={`p-6 text-center ${
+                  notification.variant === "success" ? "bg-[var(--primary-light)]"
+                  : notification.variant === "danger" ? "bg-[var(--danger-light)]"
+                  : "bg-[var(--secondary-light)]"
+                }`}>
+                  <Bell className={`w-10 h-10 mx-auto mb-3 ${
+                    notification.variant === "success" ? "text-[var(--primary)]"
+                    : notification.variant === "danger" ? "text-[var(--danger)]"
+                    : "text-[var(--secondary)]"
+                  }`} />
+                  <h3 className="text-lg font-semibold text-[var(--text-primary)]">{notification.title}</h3>
+                  <p className="text-sm text-[var(--text-secondary)] mt-1">{notification.message}</p>
+                </div>
+                <div className="p-4">
+                  <button
+                    onClick={() => setShowModal(false)}
+                    className="w-full py-2.5 bg-[var(--primary)] text-white rounded-lg text-sm font-medium hover:bg-[var(--primary-hover)] transition-colors"
+                  >
+                    รับทราบ
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}
