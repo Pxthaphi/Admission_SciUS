@@ -1,0 +1,9 @@
+/* Webfont: DBO3Std-Heavy */@font-face {
+    font-family: 'DBO3StdHeavy';
+    src: url('DB O3 Std Heavy v4.woff2') format('woff2'), /* Modern Browsers */
+         url('DB O3 Std Heavy v4.otf') format('opentype'); /* Safari, Android, iOS */
+             font-style: normal;
+    font-weight: normal;
+    text-rendering: optimizeLegibility;
+}
+

@@ -1,0 +1,11 @@
+/* Webfont: DBO3Std-MediumItalic */@font-face {
+    font-family: 'DBO3StdMedium';
+    src: url('DB O3 Std Med It.eot'); /* IE9 Compat Modes */
+    src: url('DB O3 Std Med It.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+         url('DB O3 Std Med It.woff') format('woff'), /* Modern Browsers */
+         url('DB O3 Std Med It.ttf') format('truetype'); /* Safari, Android, iOS */
+             font-style: italic;
+    font-weight: normal;
+    text-rendering: optimizeLegibility;
+}
+

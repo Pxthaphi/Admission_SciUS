@@ -1,0 +1,129 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "DB O3";
+  src: url("/fonts/DB-O3-Std/DB O3 Std v4.woff2") format("woff2"),
+       url("/fonts/DB-O3-Std/DB O3 Std v4.woff") format("woff");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "DB O3";
+  src: url("/fonts/DB-O3-Std/DB O3 Std Med v4.woff2") format("woff2"),
+       url("/fonts/DB-O3-Std/DB O3 Std Med v4.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "DB O3";
+  src: url("/fonts/DB-O3-Std/DB O3 Std Bold v4.woff2") format("woff2"),
+       url("/fonts/DB-O3-Std/DB O3 Std Bold v4.woff") format("woff");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "DB O3";
+  src: url("/fonts/DB-O3-Std/DB O3 Std Heavy v4.woff2") format("woff2"),
+       url("/fonts/DB-O3-Std/DB O3 Std Heavy v4.woff") format("woff");
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "DB O3";
+  src: url("/fonts/DB-O3-Std/DB O3 Std Light v4.woff2") format("woff2"),
+       url("/fonts/DB-O3-Std/DB O3 Std Light v4.woff") format("woff");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --background: #FAFAFA;
+  --surface: #FFFFFF;
+  --border: #E5E7EB;
+  --primary: #16A34A;
+  --primary-light: #DCFCE7;
+  --primary-hover: #15803D;
+  --accent-gold: #D4A017;
+  --secondary: #2563EB;
+  --secondary-light: #DBEAFE;
+  --text-primary: #111827;
+  --text-secondary: #6B7280;
+  --danger: #EF4444;
+  --danger-light: #FEE2E2;
+  --warning: #F59E0B;
+  --warning-light: #FEF3C7;
+}
+
+body {
+  font-family: "DB O3", "Prompt", "Inter", sans-serif;
+  background-color: var(--background);
+  color: var(--text-primary);
+}
+
+/* Number and English text use Inter */
+.font-inter {
+  font-family: "Inter", sans-serif;
+}
+
+/* React DatePicker custom styles */
+.react-datepicker {
+  font-family: "DB O3", sans-serif !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 0.75rem !important;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1) !important;
+}
+.react-datepicker__header {
+  background: var(--primary-light) !important;
+  border-bottom: 1px solid var(--border) !important;
+  border-radius: 0.75rem 0.75rem 0 0 !important;
+  padding-top: 0.5rem !important;
+}
+.react-datepicker__current-month,
+.react-datepicker__day-name {
+  color: var(--text-primary) !important;
+  font-weight: 500 !important;
+}
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+  background-color: var(--primary) !important;
+  border-radius: 0.5rem !important;
+  color: white !important;
+}
+.react-datepicker__day:hover {
+  background-color: var(--primary-light) !important;
+  border-radius: 0.5rem !important;
+}
+.react-datepicker__day {
+  border-radius: 0.5rem !important;
+  margin: 0.15rem !important;
+}
+.react-datepicker__navigation {
+  top: 0.6rem !important;
+}
+.react-datepicker__year-dropdown,
+.react-datepicker__month-dropdown {
+  background: white !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 0.5rem !important;
+}
+.react-datepicker__year-option:hover,
+.react-datepicker__month-option:hover {
+  background: var(--primary-light) !important;
+}
+.react-datepicker__year-option--selected,
+.react-datepicker__month-option--selected {
+  color: var(--primary) !important;
+}
+.react-datepicker__close-icon::after {
+  background-color: var(--text-secondary) !important;
+  font-size: 14px !important;
+}

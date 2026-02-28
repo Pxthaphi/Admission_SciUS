@@ -1,0 +1,205 @@
+generator client {
+    provider = "prisma-client"
+    output = "./generated"
+    engineType = "client"
+    runtime = "bun"
+  }
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum AdminRole {
+  SUPER_ADMIN
+  ADMIN
+}
+
+enum DocumentType {
+  INTENT_CONFIRM
+  FEE_PAYMENT
+  ENROLLMENT_CONFIRM
+  ENROLLMENT_CONTRACT
+  SCHOOL_TRANSFER
+}
+
+enum ReviewStatus {
+  PENDING
+  REVISION
+  APPROVED
+}
+
+enum EligibilityStatus {
+  PENDING
+  ELIGIBLE
+  INELIGIBLE
+}
+
+enum ExamResultStatus {
+  PENDING
+  FAILED
+  PASSED_PRIMARY
+  PASSED_RESERVE
+}
+
+enum ConfirmationStatus {
+  PENDING
+  CONFIRMED
+  WAIVED
+}
+
+model Admin {
+  id        Int       @id @default(autoincrement())
+  username  String    @unique
+  password  String
+  fullName  String
+  role      AdminRole @default(ADMIN)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  documentReviews DocumentReview[]
+  examEligibilities ExamEligibility[]
+  examRooms       ExamRoom[]
+  examResults     ExamResult[]
+  enrollments     Enrollment[]
+}
+
+model Student {
+  id          Int      @id @default(autoincrement())
+  nationalId  String   @unique
+  examId      String?  @unique
+  prefix      String?
+  firstName   String
+  lastName    String
+  dateOfBirth DateTime?
+  school      String?
+  province    String?
+  phone       String?
+  email       String?
+
+  // ที่อยู่
+  addressNo     String?  // เลขที่
+  moo           String?  // หมู่ที่
+  road          String?  // ถนน
+  soi           String?  // ซอย
+  village       String?  // หมู่บ้าน
+  subDistrict   String?  // ตำบล/แขวง
+  district      String?  // อำเภอ/เขต
+  addressProvince String? // จังหวัด (ที่อยู่)
+  postalCode    String?  // รหัสไปรษณีย์
+  homePhone     String?  // โทรศัพท์บ้าน
+
+  // ข้อมูลผู้ปกครอง
+  parentName     String?  // ชื่อ-สกุลผู้ปกครอง
+  parentRelation String?  // ความสัมพันธ์
+  parentPhone    String?  // เบอร์โทรผู้ปกครอง
+  parentEmail    String?  // อีเมลผู้ปกครอง
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  documents       Document[]
+  documentReview  DocumentReview?
+  examEligibility ExamEligibility?
+  examRoom        ExamRoom?
+  examResult      ExamResult?
+  enrollment      Enrollment?
+}
+
+model Document {
+  id         Int          @id @default(autoincrement())
+  studentId  Int
+  type       DocumentType
+  fileUrl    String
+  uploadedAt DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId])
+}
+
+model DocumentReview {
+  id         Int          @id @default(autoincrement())
+  studentId  Int          @unique
+  status     ReviewStatus @default(PENDING)
+  remark     String?
+  reviewedBy Int?
+  reviewedAt DateTime?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  student  Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  reviewer Admin?  @relation(fields: [reviewedBy], references: [id])
+}
+
+model ExamEligibility {
+  id        Int               @id @default(autoincrement())
+  studentId Int               @unique
+  status    EligibilityStatus @default(PENDING)
+  remark    String?
+  updatedBy Int?
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  admin   Admin?  @relation(fields: [updatedBy], references: [id])
+}
+
+model ExamRoom {
+  id         Int      @id @default(autoincrement())
+  studentId  Int      @unique
+  roomNumber String
+  seatNumber String
+  updatedBy  Int?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  admin   Admin?  @relation(fields: [updatedBy], references: [id])
+}
+
+model ExamResult {
+  id        Int              @id @default(autoincrement())
+  studentId Int              @unique
+  result    ExamResultStatus @default(PENDING)
+  rank      Int?
+  remark    String?
+  updatedBy Int?
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  admin   Admin?  @relation(fields: [updatedBy], references: [id])
+}
+
+model Enrollment {
+  id                   Int                @id @default(autoincrement())
+  studentId            Int                @unique
+  confirmationStatus   ConfirmationStatus @default(PENDING)
+  documentReviewStatus ReviewStatus       @default(PENDING)
+  reviewedBy           Int?
+  confirmedAt          DateTime?
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+
+  student  Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  reviewer Admin?  @relation(fields: [reviewedBy], references: [id])
+}
+
+model AuditLog {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  userRole    String
+  action      String
+  targetTable String
+  targetId    Int
+  oldValue    Json?
+  newValue    Json?
+  createdAt   DateTime @default(now())
+}
+
+model SystemSetting {
+  id    Int    @id @default(autoincrement())
+  key   String @unique
+  value String
+}
