@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import { ColumnDef } from "@tanstack/react-table";
 import { DataTable } from "@/components/shared/data-table";
 import { Plus, Pencil, Trash2, X } from "lucide-react";
@@ -42,6 +43,8 @@ const emptyStudent: Omit<Student, "id"> = {
 const emptyAdmin = { username: "", fullName: "", password: "", role: "ADMIN" };
 
 export default function UsersPage() {
+  const { data: session } = useSession();
+  const isSuperAdmin = (session?.user as any)?.adminRole === "SUPER_ADMIN";
   const [tab, setTab] = useState<"student" | "admin">("student");
   const [students, setStudents] = useState<Student[]>([]);
   const [admins, setAdmins] = useState<Admin[]>([]);
@@ -132,30 +135,30 @@ export default function UsersPage() {
     { header: "ชื่อ-สกุล", cell: ({ row }) => `${row.original.prefix || ""}${row.original.firstName} ${row.original.lastName}` },
     { accessorKey: "school", header: "โรงเรียน", cell: ({ row }) => row.original.school || "-" },
     { accessorKey: "province", header: "จังหวัด", cell: ({ row }) => row.original.province || "-" },
-    {
+    ...(isSuperAdmin ? [{
       id: "actions", header: "จัดการ",
-      cell: ({ row }) => (
+      cell: ({ row }: { row: { original: Student } }) => (
         <div className="flex items-center gap-1">
           <button onClick={() => openEdit(row.original)} className="p-1.5 rounded-lg hover:bg-gray-100 text-[var(--text-secondary)]" title="แก้ไข"><Pencil className="w-4 h-4" /></button>
           <button onClick={() => handleDelete(row.original.id)} className="p-1.5 rounded-lg hover:bg-gray-100 text-[var(--danger)]" title="ลบ"><Trash2 className="w-4 h-4" /></button>
         </div>
       ),
-    },
+    }] as ColumnDef<Student>[] : []),
   ];
 
   const adminColumns: ColumnDef<Admin>[] = [
     { accessorKey: "username", header: "ชื่อผู้ใช้" },
     { accessorKey: "fullName", header: "ชื่อ-นามสกุล" },
     { accessorKey: "role", header: "บทบาท", cell: ({ row }) => row.original.role === "SUPER_ADMIN" ? "Super Admin" : "Admin" },
-    {
+    ...(isSuperAdmin ? [{
       id: "actions", header: "จัดการ",
-      cell: ({ row }) => (
+      cell: ({ row }: { row: { original: Admin } }) => (
         <div className="flex items-center gap-1">
           <button onClick={() => openEdit(row.original)} className="p-1.5 rounded-lg hover:bg-gray-100 text-[var(--text-secondary)]" title="แก้ไข"><Pencil className="w-4 h-4" /></button>
           <button onClick={() => handleDelete(row.original.id)} className="p-1.5 rounded-lg hover:bg-gray-100 text-[var(--danger)]" title="ลบ"><Trash2 className="w-4 h-4" /></button>
         </div>
       ),
-    },
+    }] as ColumnDef<Admin>[] : []),
   ];
 
   const inputClass = "w-full px-3 py-2 rounded-lg border border-[var(--border)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent";
@@ -165,9 +168,11 @@ export default function UsersPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-xl font-semibold text-[var(--text-primary)]">จัดการผู้ใช้งาน</h1>
-        <button onClick={openCreate} className="flex items-center gap-2 px-4 py-2 bg-[var(--primary)] text-white rounded-lg text-sm font-medium hover:bg-[var(--primary-hover)] transition-colors">
-          <Plus className="w-4 h-4" />เพิ่ม{tab === "student" ? "นักเรียน" : "ผู้ดูแล"}
-        </button>
+        {isSuperAdmin && (
+          <button onClick={openCreate} className="flex items-center gap-2 px-4 py-2 bg-[var(--primary)] text-white rounded-lg text-sm font-medium hover:bg-[var(--primary-hover)] transition-colors">
+            <Plus className="w-4 h-4" />เพิ่ม{tab === "student" ? "นักเรียน" : "ผู้ดูแล"}
+          </button>
+        )}
       </div>
 
       <div className="flex gap-1 mb-4 bg-gray-100 rounded-lg p-1 w-fit">

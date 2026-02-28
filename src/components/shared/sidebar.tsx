@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import {
   LayoutDashboard, Users, FileCheck, ShieldCheck,
   DoorOpen, Trophy, GraduationCap, LogOut, Menu, X, ScrollText,
@@ -19,11 +19,13 @@ const menuItems = [
   { href: "/admin/exam-rooms", label: "จัดการห้องสอบ", icon: DoorOpen },
   { href: "/admin/results", label: "ผลการสอบคัดเลือก", icon: Trophy },
   { href: "/admin/enrollment", label: "รายงานตัว/มอบตัว", icon: GraduationCap },
-  { href: "/admin/audit-logs", label: "ประวัติการใช้งาน", icon: ScrollText },
+  { href: "/admin/audit-logs", label: "ประวัติการใช้งาน", icon: ScrollText, superAdminOnly: true },
 ];
 
 export function AdminSidebar() {
   const pathname = usePathname();
+  const { data: session } = useSession();
+  const isSuperAdmin = (session?.user as any)?.adminRole === "SUPER_ADMIN";
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const SidebarContent = () => (
@@ -41,7 +43,7 @@ export function AdminSidebar() {
       </div>
 
       <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
-        {menuItems.map((item) => {
+        {menuItems.filter((item) => !(item as any).superAdminOnly || isSuperAdmin).map((item) => {
           const isActive = pathname === item.href;
           return (
             <Link

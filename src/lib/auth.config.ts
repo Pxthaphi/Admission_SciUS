@@ -30,6 +30,7 @@ export const authConfig: NextAuthConfig = {
       if (user) {
         token.role = (user as Record<string, unknown>).role as string;
         token.nationalId = (user as Record<string, unknown>).nationalId as string | undefined;
+        token.adminRole = (user as Record<string, unknown>).adminRole as string | undefined;
       }
       return token;
     },
@@ -38,6 +39,7 @@ export const authConfig: NextAuthConfig = {
         session.user.id = token.sub!;
         (session.user as unknown as Record<string, unknown>).role = token.role;
         (session.user as unknown as Record<string, unknown>).nationalId = token.nationalId;
+        (session.user as unknown as Record<string, unknown>).adminRole = token.adminRole;
       }
       return session;
     },

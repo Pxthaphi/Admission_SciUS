@@ -7,6 +7,9 @@ export async function GET(req: NextRequest) {
   if (!session || session.user.role === "student") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+  if ((session.user as any).adminRole !== "SUPER_ADMIN") {
+    return NextResponse.json({ error: "เฉพาะ Super Admin เท่านั้นที่สามารถดูประวัติการใช้งานได้" }, { status: 403 });
+  }
 
   const url = req.nextUrl;
   const page = parseInt(url.searchParams.get("page") || "1");

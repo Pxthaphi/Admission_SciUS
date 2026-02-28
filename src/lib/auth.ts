@@ -49,6 +49,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             id: String(admin.id),
             name: admin.fullName,
             role: admin.role.toLowerCase(),
+            adminRole: admin.role,
           };
         }
       },

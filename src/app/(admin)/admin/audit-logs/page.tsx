@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ScrollText, ChevronLeft, ChevronRight, Filter, Clock, User, Database } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { ScrollText, ChevronLeft, ChevronRight, Filter, Clock, User, Database, ShieldAlert } from "lucide-react";
 import { DashboardReady } from "@/components/shared/dashboard-ready";
 
 type AuditLog = {
@@ -75,6 +76,8 @@ function formatDate(dateStr: string) {
 }
 
 export default function AuditLogsPage() {
+  const { data: session } = useSession();
+  const isSuperAdmin = (session?.user as any)?.adminRole === "SUPER_ADMIN";
   const [logs, setLogs] = useState<AuditLog[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -83,6 +86,7 @@ export default function AuditLogsPage() {
   const limit = 30;
 
   const fetchLogs = () => {
+    if (!isSuperAdmin) { setLoading(false); return; }
     setLoading(true);
     const params = new URLSearchParams({ page: String(page), limit: String(limit) });
     if (filterTable) params.set("table", filterTable);
@@ -95,9 +99,19 @@ export default function AuditLogsPage() {
       .finally(() => setLoading(false));
   };
 
-  useEffect(() => { fetchLogs(); }, [page, filterTable]);
+  useEffect(() => { fetchLogs(); }, [page, filterTable, isSuperAdmin]);
 
   const totalPages = Math.ceil(total / limit);
+
+  if (!isSuperAdmin) {
+    return (
+      <div className="flex flex-col items-center justify-center py-24 text-center">
+        <ShieldAlert className="w-12 h-12 text-[var(--text-secondary)] mb-4" />
+        <h2 className="text-lg font-semibold text-[var(--text-primary)] mb-1">ไม่มีสิทธิ์เข้าถึง</h2>
+        <p className="text-sm text-[var(--text-secondary)]">เฉพาะ Super Admin เท่านั้นที่สามารถดูประวัติการใช้งานได้</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

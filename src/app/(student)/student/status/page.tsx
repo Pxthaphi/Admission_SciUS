@@ -177,7 +177,7 @@ export default function StatusPage() {
   const fireConfetti = useCallback(() => {
     const duration = 3000;
     const end = Date.now() + duration;
-    const colors = ["#22c55e", "#3b82f6", "#f59e0b", "#ec4899", "#8b5cf6"];
+    const colors = ["#ff0000", "#ff6600", "#ffcc00", "#0066ff", "#cc00ff", "#ff0099"];
 
     const frame = () => {
       confetti({
