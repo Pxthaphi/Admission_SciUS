@@ -8,6 +8,22 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  // Auto-create enrollment for students who passed but don't have enrollment yet
+  const passedWithoutEnrollment = await prisma.examResult.findMany({
+    where: {
+      result: { in: ["PASSED_PRIMARY", "PASSED_RESERVE"] },
+      student: { enrollment: null },
+    },
+    select: { studentId: true },
+  });
+
+  if (passedWithoutEnrollment.length > 0) {
+    await prisma.enrollment.createMany({
+      data: passedWithoutEnrollment.map((r) => ({ studentId: r.studentId })),
+      skipDuplicates: true,
+    });
+  }
+
   const enrollments = await prisma.enrollment.findMany({
     include: {
       student: {
@@ -20,7 +36,7 @@ export async function GET() {
         },
       },
     },
-    orderBy: { createdAt: "desc" },
+    orderBy: { student: { examId: "asc" } },
   });
 
   return NextResponse.json(
