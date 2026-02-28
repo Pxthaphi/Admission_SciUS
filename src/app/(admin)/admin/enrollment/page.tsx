@@ -135,20 +135,34 @@ export default function EnrollmentPage() {
     },
     {
       header: "สถานะเอกสาร",
-      cell: ({ row }) => (
-        <button
-          onClick={() => {
-            setStatusRow(row.original);
-            setRevisionDocs(row.original.revisionDocTypes || []);
-          }}
-          className="cursor-pointer"
-        >
-          <div className="flex items-center gap-1.5">
-            <StatusBadge status={row.original.documentReviewStatus} />
-            <Pencil className="w-3 h-3 text-[var(--text-secondary)]" />
-          </div>
-        </button>
-      ),
+      cell: ({ row }) => {
+        const r = row.original;
+        const isConfirmed = r.confirmationStatus === "CONFIRMED" || r.confirmationStatus === "WAIVED";
+        const requiredDocs = r.confirmationStatus === "WAIVED" ? 1 : allEnrollDocTypes.length;
+        const docsComplete = r.documents.length >= requiredDocs;
+
+        if (!isConfirmed) {
+          return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-400">รอยืนยันสิทธิ์</span>;
+        }
+        if (!docsComplete) {
+          return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-400">รอยื่นเอกสาร ({r.documents.length}/{requiredDocs})</span>;
+        }
+
+        return (
+          <button
+            onClick={() => {
+              setStatusRow(r);
+              setRevisionDocs(r.revisionDocTypes || []);
+            }}
+            className="cursor-pointer"
+          >
+            <div className="flex items-center gap-1.5">
+              <StatusBadge status={r.documentReviewStatus} />
+              <Pencil className="w-3 h-3 text-[var(--text-secondary)]" />
+            </div>
+          </button>
+        );
+      },
     },
   ];
 

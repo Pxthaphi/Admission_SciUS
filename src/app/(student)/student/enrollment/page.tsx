@@ -292,7 +292,14 @@ export default function StudentEnrollmentPage() {
           {/* Document review status */}
           <div className="mt-4 flex items-center gap-2">
             <span className="text-sm text-[var(--text-secondary)]">สถานะตรวจเอกสาร:</span>
-            <StatusBadge status={data.documentReviewStatus} />
+            {(() => {
+              const requiredCount = data.confirmationStatus === "WAIVED" ? 1 : Object.keys(docsToShow).length;
+              const uploadedCount = data.documents.filter((d) => Object.keys(docsToShow).includes(d.type)).length;
+              if (uploadedCount < requiredCount) {
+                return <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-500">รอยื่นเอกสาร ({uploadedCount}/{requiredCount})</span>;
+              }
+              return <StatusBadge status={data.documentReviewStatus} />;
+            })()}
           </div>
         </div>
       )}
