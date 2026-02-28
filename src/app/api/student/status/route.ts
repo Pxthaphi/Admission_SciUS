@@ -10,11 +10,18 @@ export async function GET() {
 
   const studentId = parseInt(session.user.id);
 
-  const [docReview, eligibility, examResult, documents] = await Promise.all([
+  const [docReview, eligibility, examResult, documents, enrollment, enrollDocs] = await Promise.all([
     prisma.documentReview.findUnique({ where: { studentId } }) as any,
     prisma.examEligibility.findUnique({ where: { studentId } }),
     prisma.examResult.findUnique({ where: { studentId } }),
     prisma.document.findMany({ where: { studentId }, select: { type: true } }),
+    prisma.enrollment.findUnique({ where: { studentId } }) as any,
+    prisma.document.count({
+      where: {
+        studentId,
+        type: { in: ["ENROLLMENT_CONFIRM", "ENROLLMENT_CONTRACT", "SCHOOL_TRANSFER"] },
+      },
+    }),
   ]);
 
   const uploadedTypes = documents.map((d) => d.type);
@@ -28,5 +35,8 @@ export async function GET() {
     examResult: examResult?.result || "PENDING",
     examResultRemark: examResult?.remark || null,
     uploadedDocuments: uploadedTypes,
+    confirmationStatus: enrollment?.confirmationStatus || null,
+    enrollmentDocReviewStatus: enrollment?.documentReviewStatus || null,
+    enrollmentDocCount: enrollDocs,
   });
 }

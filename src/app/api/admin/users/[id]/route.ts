@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { writeAuditLog } from "@/lib/audit";
+import { supabaseAdmin } from "@/lib/supabase";
 import bcrypt from "bcryptjs";
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
@@ -82,6 +83,17 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
   try {
     if (type === "student") {
       const old = await prisma.student.findUnique({ where: { id: parseInt(id) } });
+
+      // Delete uploaded files from Supabase Storage
+      const docs = await prisma.document.findMany({
+        where: { studentId: parseInt(id) },
+        select: { fileUrl: true },
+      });
+      const filePaths = docs.map((d) => d.fileUrl).filter(Boolean);
+      if (filePaths.length > 0) {
+        await supabaseAdmin.storage.from("admission").remove(filePaths);
+      }
+
       await prisma.student.delete({ where: { id: parseInt(id) } });
       if (old) {
         await writeAuditLog({

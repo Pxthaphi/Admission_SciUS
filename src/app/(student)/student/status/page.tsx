@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import confetti from "canvas-confetti";
 import {
-  Upload, FileSearch, ShieldCheck, Trophy,
+  Upload, FileSearch, ShieldCheck, Trophy, GraduationCap,
   CheckCircle, Clock, AlertCircle, ArrowRight, Lock, X, Bell, PartyPopper,
 } from "lucide-react";
 
@@ -19,6 +19,10 @@ type StatusData = {
   examResult: string;
   examResultRemark: string | null;
   uploadedDocuments: string[];
+  // Enrollment
+  confirmationStatus: string | null;
+  enrollmentDocReviewStatus: string | null;
+  enrollmentDocCount: number;
 };
 
 type StepState = "complete" | "active" | "locked";
@@ -28,6 +32,7 @@ const stepsConfig = [
   { key: "documentReview", label: "ตรวจสอบเอกสาร", icon: FileSearch },
   { key: "eligibility", label: "สิทธิ์ในการสอบ", icon: ShieldCheck },
   { key: "examResult", label: "ผลการสอบคัดเลือก", icon: Trophy },
+  { key: "enrollment", label: "รายงานตัวและมอบตัว", icon: GraduationCap },
 ] as const;
 
 function resolveSteps(data: StatusData) {
@@ -88,19 +93,51 @@ function resolveSteps(data: StatusData) {
   // Step 4: Exam Result
   const examStatus = data.examResult;
   if (examStatus === "PASSED_PRIMARY") {
-    steps.push({
-      ...stepsConfig[3], state: "complete", statusLabel: "สอบผ่าน (ตัวจริง)", variant: "success",
-      action: { href: "/student/enrollment", label: "ไปยืนยันสิทธิ์" },
-    });
+    steps.push({ ...stepsConfig[3], state: "complete", statusLabel: "สอบผ่าน (ตัวจริง)", variant: "success" });
   } else if (examStatus === "PASSED_RESERVE") {
-    steps.push({
-      ...stepsConfig[3], state: "complete", statusLabel: "สอบผ่าน (สำรอง)", variant: "info",
-      action: { href: "/student/enrollment", label: "ไปยืนยันสิทธิ์" },
-    });
+    steps.push({ ...stepsConfig[3], state: "complete", statusLabel: "สอบผ่าน (สำรอง)", variant: "info" });
   } else if (examStatus === "FAILED") {
     steps.push({ ...stepsConfig[3], state: "active", statusLabel: "ไม่ผ่านการคัดเลือก", variant: "danger", remark: data.examResultRemark });
+    return steps;
   } else {
     steps.push({ ...stepsConfig[3], state: "active", statusLabel: "รอประกาศผลสอบ", variant: "pending" });
+    return steps;
+  }
+
+  // Step 5: Enrollment (only for passed students)
+  const confirmStatus = data.confirmationStatus;
+  const enrollDocStatus = data.enrollmentDocReviewStatus;
+  const enrollDocCount = data.enrollmentDocCount || 0;
+
+  if (confirmStatus === "WAIVED") {
+    steps.push({ ...stepsConfig[4], state: "active", statusLabel: "สละสิทธิ์แล้ว", variant: "danger" });
+  } else if (confirmStatus === "CONFIRMED") {
+    // Confirmed — check document status
+    if (enrollDocStatus === "APPROVED") {
+      steps.push({ ...stepsConfig[4], state: "complete", statusLabel: "รายงานตัวเสร็จสิ้น", variant: "success" });
+    } else if (enrollDocStatus === "REVISION") {
+      steps.push({
+        ...stepsConfig[4], state: "active", statusLabel: "เอกสารรายงานตัวต้องแก้ไข", variant: "danger",
+        action: { href: "/student/enrollment", label: "ไปแก้ไขเอกสาร" },
+      });
+    } else if (enrollDocCount >= 3) {
+      steps.push({
+        ...stepsConfig[4], state: "active", statusLabel: "ยืนยันสิทธิ์แล้ว รอตรวจเอกสารรายงานตัว", variant: "pending",
+      });
+    } else {
+      steps.push({
+        ...stepsConfig[4], state: "active",
+        statusLabel: `ยืนยันสิทธิ์แล้ว รอยื่นเอกสาร (${enrollDocCount}/3)`,
+        variant: "pending",
+        action: { href: "/student/enrollment", label: "ไปอัปโหลดเอกสาร" },
+      });
+    }
+  } else {
+    // PENDING
+    steps.push({
+      ...stepsConfig[4], state: "active", statusLabel: "รอยืนยันสิทธิ์", variant: "pending",
+      action: { href: "/student/enrollment", label: "ไปยืนยันสิทธิ์" },
+    });
   }
 
   return steps;
@@ -259,10 +296,10 @@ export default function StatusPage() {
           })}
 
           {/* Locked future steps */}
-          {steps.length < 4 && (
+          {steps.length < 5 && (
             <>
               {stepsConfig.slice(steps.length).map((step, i) => {
-                const isLast = steps.length + i === 3;
+                const isLast = steps.length + i === 4;
                 return (
                   <div key={step.key} className="flex gap-4 opacity-40">
                     <div className="flex flex-col items-center">
