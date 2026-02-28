@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { Users, GraduationCap, School, CheckCircle, XCircle, Trophy } from "lucide-react";
 import { DashboardReady } from "@/components/shared/dashboard-ready";
 
+export const dynamic = "force-dynamic";
+
 async function getStats() {
   const [
     totalStudents,
