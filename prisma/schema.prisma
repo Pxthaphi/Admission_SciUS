@@ -12,6 +12,7 @@ datasource db {
 enum AdminRole {
   SUPER_ADMIN
   ADMIN
+  VIEWER
 }
 
 enum DocumentType {

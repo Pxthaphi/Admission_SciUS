@@ -2,11 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { writeAuditLog } from "@/lib/audit";
+import { isViewer } from "@/lib/utils";
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
   if (!session || session.user.role === "student") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  if (isViewer(session)) {
+    return NextResponse.json({ error: "Viewer ไม่มีสิทธิ์แก้ไขข้อมูล" }, { status: 403 });
   }
 
   const { id } = await params;
@@ -38,6 +42,9 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
   const session = await auth();
   if (!session || session.user.role === "student") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  if (isViewer(session)) {
+    return NextResponse.json({ error: "Viewer ไม่มีสิทธิ์แก้ไขข้อมูล" }, { status: 403 });
   }
 
   const { id } = await params;

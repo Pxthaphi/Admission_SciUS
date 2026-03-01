@@ -10,6 +10,7 @@ import Swal from "sweetalert2";
 import { toast } from "sonner";
 import { getFileUrl } from "@/lib/utils";
 import { ExportButtons } from "@/components/shared/export-buttons";
+import { useIsViewer } from "@/hooks/use-is-viewer";
 
 type DocRow = {
   id: number;
@@ -39,6 +40,7 @@ const docStatusOptions = [
 ];
 
 export default function DocumentsPage() {
+  const isViewer = useIsViewer();
   const [data, setData] = useState<DocRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalRow, setModalRow] = useState<DocRow | null>(null);
@@ -139,6 +141,7 @@ export default function DocumentsPage() {
       id: "actions", header: "",
       cell: ({ row }) => {
         const allUploaded = allDocTypes.every((t) => row.original.documents.some((d) => d.type === t));
+        if (isViewer) return null;
         return (
           <button
             onClick={() => setStatusModalRow(row.original)}
@@ -161,9 +164,11 @@ export default function DocumentsPage() {
         <h1 className="text-xl font-semibold text-[var(--text-primary)]">ตรวจสอบเอกสาร</h1>
         <div className="flex items-center gap-2">
           <ExportButtons page="documents" />
-          <button onClick={handleBatchApprove} className="flex items-center gap-1.5 px-3 py-2 bg-[var(--primary)] text-white rounded-lg text-xs font-medium hover:bg-[var(--primary-hover)] transition-colors">
-            <CheckCircle className="w-3.5 h-3.5" />อนุมัติทั้งหมดที่รอ
-          </button>
+          {!isViewer && (
+            <button onClick={handleBatchApprove} className="flex items-center gap-1.5 px-3 py-2 bg-[var(--primary)] text-white rounded-lg text-xs font-medium hover:bg-[var(--primary-hover)] transition-colors">
+              <CheckCircle className="w-3.5 h-3.5" />อนุมัติทั้งหมดที่รอ
+            </button>
+          )}
         </div>
       </div>
       <DataTable columns={columns} data={data} searchPlaceholder="ค้นหาเลขผู้สอบ, ชื่อ, โรงเรียน..." />

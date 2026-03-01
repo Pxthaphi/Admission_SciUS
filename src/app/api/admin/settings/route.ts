@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { writeAuditLog } from "@/lib/audit";
+import { isViewer } from "@/lib/utils";
 
 export async function GET() {
   const session = await auth();
@@ -20,6 +21,9 @@ export async function PUT(req: NextRequest) {
   const session = await auth();
   if (!session || session.user.role === "student") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  if (isViewer(session)) {
+    return NextResponse.json({ error: "Viewer ไม่มีสิทธิ์แก้ไขข้อมูล" }, { status: 403 });
   }
 
   const body = await req.json();

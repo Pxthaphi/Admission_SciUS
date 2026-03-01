@@ -7,6 +7,7 @@ import { Save, Trash2, Shuffle } from "lucide-react";
 import Swal from "sweetalert2";
 import { toast } from "sonner";
 import { ExportButtons } from "@/components/shared/export-buttons";
+import { useIsViewer } from "@/hooks/use-is-viewer";
 
 type RoomRow = {
   id: number;
@@ -21,6 +22,7 @@ type RoomRow = {
 };
 
 export default function ExamRoomsPage() {
+  const isViewer = useIsViewer();
   const [data, setData] = useState<RoomRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [changes, setChanges] = useState<Record<number, { roomNumber?: string; seatNumber?: string }>>({});
@@ -122,6 +124,7 @@ export default function ExamRoomsPage() {
           onChange={(e) => setChanges((p) => ({ ...p, [row.original.id]: { ...p[row.original.id], roomNumber: e.target.value } }))}
           className="w-20 text-xs border border-[var(--border)] rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
           placeholder="ห้อง"
+          readOnly={isViewer}
         />
       ),
     },
@@ -133,21 +136,25 @@ export default function ExamRoomsPage() {
           onChange={(e) => setChanges((p) => ({ ...p, [row.original.id]: { ...p[row.original.id], seatNumber: e.target.value } }))}
           className="w-20 text-xs border border-[var(--border)] rounded-lg px-2 py-1 focus:outline-none focus:ring-1 focus:ring-[var(--primary)]"
           placeholder="ที่นั่ง"
+          readOnly={isViewer}
         />
       ),
     },
     {
       id: "actions", header: "",
-      cell: ({ row }) => (
-        <div className="flex items-center gap-1">
-          <button onClick={() => handleSave(row.original.id)} disabled={!changes[row.original.id]} className="p-1.5 rounded-lg hover:bg-gray-100 text-[var(--primary)] disabled:opacity-30" title="บันทึก">
-            <Save className="w-4 h-4" />
-          </button>
-          <button onClick={() => handleDelete(row.original)} className="p-1.5 rounded-lg hover:bg-gray-100 text-[var(--danger)]" title="ลบห้องสอบ">
-            <Trash2 className="w-4 h-4" />
-          </button>
-        </div>
-      ),
+      cell: ({ row }) => {
+        if (isViewer) return null;
+        return (
+          <div className="flex items-center gap-1">
+            <button onClick={() => handleSave(row.original.id)} disabled={!changes[row.original.id]} className="p-1.5 rounded-lg hover:bg-gray-100 text-[var(--primary)] disabled:opacity-30" title="บันทึก">
+              <Save className="w-4 h-4" />
+            </button>
+            <button onClick={() => handleDelete(row.original)} className="p-1.5 rounded-lg hover:bg-gray-100 text-[var(--danger)]" title="ลบห้องสอบ">
+              <Trash2 className="w-4 h-4" />
+            </button>
+          </div>
+        );
+      },
     },
   ];
 
@@ -159,9 +166,11 @@ export default function ExamRoomsPage() {
         <h1 className="text-xl font-semibold text-[var(--text-primary)]">จัดการห้องสอบ</h1>
         <div className="flex items-center gap-2">
           <ExportButtons page="exam-rooms" />
-          <button onClick={handleAutoAssign} className="flex items-center gap-1.5 px-3 py-2 bg-[var(--primary)] text-white rounded-lg text-xs font-medium hover:bg-[var(--primary-hover)] transition-colors">
-            <Shuffle className="w-3.5 h-3.5" />จัดห้องอัตโนมัติ
-          </button>
+          {!isViewer && (
+            <button onClick={handleAutoAssign} className="flex items-center gap-1.5 px-3 py-2 bg-[var(--primary)] text-white rounded-lg text-xs font-medium hover:bg-[var(--primary-hover)] transition-colors">
+              <Shuffle className="w-3.5 h-3.5" />จัดห้องอัตโนมัติ
+            </button>
+          )}
         </div>
       </div>
       <DataTable columns={columns} data={data} searchPlaceholder="ค้นหาเลขผู้สอบ, ชื่อ, โรงเรียน..." />

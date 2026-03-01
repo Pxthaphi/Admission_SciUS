@@ -9,6 +9,7 @@ import { CheckCircle, XCircle, Pencil } from "lucide-react";
 import Swal from "sweetalert2";
 import { toast } from "sonner";
 import { ExportButtons } from "@/components/shared/export-buttons";
+import { useIsViewer } from "@/hooks/use-is-viewer";
 
 type EligibilityRow = {
   id: number;
@@ -29,6 +30,7 @@ const eligibilityStatusOptions = [
 ];
 
 export default function EligibilityPage() {
+  const isViewer = useIsViewer();
   const [data, setData] = useState<EligibilityRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusModalRow, setStatusModalRow] = useState<EligibilityRow | null>(null);
@@ -105,15 +107,18 @@ export default function EligibilityPage() {
     },
     {
       id: "actions", header: "",
-      cell: ({ row }) => (
-        <button
-          onClick={() => setStatusModalRow(row.original)}
-          className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-gray-100 text-[var(--text-secondary)] hover:bg-gray-200 transition-colors"
-        >
-          <Pencil className="w-3 h-3" />
-          เปลี่ยนสถานะ
-        </button>
-      ),
+      cell: ({ row }) => {
+        if (isViewer) return null;
+        return (
+          <button
+            onClick={() => setStatusModalRow(row.original)}
+            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium bg-gray-100 text-[var(--text-secondary)] hover:bg-gray-200 transition-colors"
+          >
+            <Pencil className="w-3 h-3" />
+            เปลี่ยนสถานะ
+          </button>
+        );
+      },
     },
   ];
 
@@ -128,12 +133,16 @@ export default function EligibilityPage() {
         </div>
         <div className="flex gap-2">
           <ExportButtons page="eligibility" />
-          <button onClick={() => handleBatchUpdate("ELIGIBLE")} className="flex items-center gap-1.5 px-3 py-2 bg-[var(--primary)] text-white rounded-lg text-xs font-medium hover:bg-[var(--primary-hover)] transition-colors">
-            <CheckCircle className="w-3.5 h-3.5" />อนุมัติทั้งหมดที่รอ
-          </button>
-          <button onClick={() => handleBatchUpdate("INELIGIBLE")} className="flex items-center gap-1.5 px-3 py-2 bg-[var(--danger)] text-white rounded-lg text-xs font-medium hover:opacity-90 transition-colors">
-            <XCircle className="w-3.5 h-3.5" />ไม่อนุมัติทั้งหมดที่รอ
-          </button>
+          {!isViewer && (
+            <>
+              <button onClick={() => handleBatchUpdate("ELIGIBLE")} className="flex items-center gap-1.5 px-3 py-2 bg-[var(--primary)] text-white rounded-lg text-xs font-medium hover:bg-[var(--primary-hover)] transition-colors">
+                <CheckCircle className="w-3.5 h-3.5" />อนุมัติทั้งหมดที่รอ
+              </button>
+              <button onClick={() => handleBatchUpdate("INELIGIBLE")} className="flex items-center gap-1.5 px-3 py-2 bg-[var(--danger)] text-white rounded-lg text-xs font-medium hover:opacity-90 transition-colors">
+                <XCircle className="w-3.5 h-3.5" />ไม่อนุมัติทั้งหมดที่รอ
+              </button>
+            </>
+          )}
         </div>
       </div>
       <DataTable columns={columns} data={data} searchPlaceholder="ค้นหาเลขผู้สอบ, ชื่อ, โรงเรียน..." />

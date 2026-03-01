@@ -11,6 +11,7 @@ import { getFileUrl } from "@/lib/utils";
 import { StatusChangeModal } from "@/components/shared/status-change-modal";
 import DatePicker, { registerLocale } from "react-datepicker";
 import { th } from "date-fns/locale";
+import { useIsViewer } from "@/hooks/use-is-viewer";
 
 registerLocale("th", th);
 
@@ -40,6 +41,7 @@ const docTypeLabel: Record<string, string> = {
 const allEnrollDocTypes = ["ENROLLMENT_CONFIRM", "ENROLLMENT_CONTRACT", "SCHOOL_TRANSFER"] as const;
 
 export default function EnrollmentPage() {
+  const isViewer = useIsViewer();
   const [data, setData] = useState<EnrollmentRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [showSettings, setShowSettings] = useState(false);
@@ -172,10 +174,11 @@ export default function EnrollmentPage() {
               setRevisionDocs(r.revisionDocTypes || []);
             }}
             className="cursor-pointer"
+            disabled={isViewer}
           >
             <div className="flex items-center gap-1.5">
               <StatusBadge status={r.documentReviewStatus} />
-              <Pencil className="w-3 h-3 text-[var(--text-secondary)]" />
+              {!isViewer && <Pencil className="w-3 h-3 text-[var(--text-secondary)]" />}
             </div>
           </button>
         );
@@ -194,13 +197,15 @@ export default function EnrollmentPage() {
         </div>
         <div className="flex items-center gap-2">
           <ExportButtons page="enrollment" />
-          <button
-            onClick={() => setShowSettings(!showSettings)}
-            className="flex items-center gap-1.5 px-3 py-2 bg-white border border-[var(--border)] text-[var(--text-secondary)] rounded-lg text-xs font-medium hover:bg-gray-50 transition-colors"
-          >
-            <Settings className="w-3.5 h-3.5" />
-            ตั้งค่าช่วงเวลา
-          </button>
+          {!isViewer && (
+            <button
+              onClick={() => setShowSettings(!showSettings)}
+              className="flex items-center gap-1.5 px-3 py-2 bg-white border border-[var(--border)] text-[var(--text-secondary)] rounded-lg text-xs font-medium hover:bg-gray-50 transition-colors"
+            >
+              <Settings className="w-3.5 h-3.5" />
+              ตั้งค่าช่วงเวลา
+            </button>
+          )}
         </div>
       </div>
 

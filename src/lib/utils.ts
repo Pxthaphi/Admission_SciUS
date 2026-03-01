@@ -32,3 +32,10 @@ export function getFileUrl(fileUrl: string) {
   // New relative path
   return `/api/files/${fileUrl}`;
 }
+
+/**
+ * Check if the current admin session is a VIEWER role (read-only).
+ */
+export function isViewer(session: any): boolean {
+  return session?.user?.adminRole === "VIEWER";
+}
