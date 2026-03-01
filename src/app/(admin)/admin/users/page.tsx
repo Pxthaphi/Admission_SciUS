@@ -149,7 +149,7 @@ export default function UsersPage() {
   const adminColumns: ColumnDef<Admin>[] = [
     { accessorKey: "username", header: "ชื่อผู้ใช้" },
     { accessorKey: "fullName", header: "ชื่อ-นามสกุล" },
-    { accessorKey: "role", header: "บทบาท", cell: ({ row }) => row.original.role === "SUPER_ADMIN" ? "Super Admin" : "Admin" },
+    { accessorKey: "role", header: "บทบาท", cell: ({ row }) => row.original.role === "SUPER_ADMIN" ? "Super Admin" : row.original.role === "VIEWER" ? "Viewer" : "Admin" },
     ...(isSuperAdmin ? [{
       id: "actions", header: "จัดการ",
       cell: ({ row }: { row: { original: Admin } }) => (
@@ -288,6 +288,7 @@ export default function UsersPage() {
                     <select value={form.role || "ADMIN"} onChange={(e) => setField("role", e.target.value)} className={inputClass}>
                       <option value="ADMIN">Admin</option>
                       <option value="SUPER_ADMIN">Super Admin</option>
+                      <option value="VIEWER">Viewer</option>
                     </select>
                   </div>
                 </>
