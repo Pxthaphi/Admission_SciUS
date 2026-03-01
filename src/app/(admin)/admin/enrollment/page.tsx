@@ -34,7 +34,7 @@ type EnrollmentRow = {
 const docTypeLabel: Record<string, string> = {
   ENROLLMENT_CONFIRM: "ยืนยันรายงานตัว",
   ENROLLMENT_CONTRACT: "สัญญามอบตัว",
-  SCHOOL_TRANSFER: "ย้ายโรงเรียน",
+  SCHOOL_TRANSFER: "ใบมอบตัว",
 };
 
 const allEnrollDocTypes = ["ENROLLMENT_CONFIRM", "ENROLLMENT_CONTRACT", "SCHOOL_TRANSFER"] as const;
@@ -44,7 +44,8 @@ export default function EnrollmentPage() {
   const [loading, setLoading] = useState(true);
   const [showSettings, setShowSettings] = useState(false);
   const [enrollStart, setEnrollStart] = useState<Date | null>(null);
-  const [enrollEnd, setEnrollEnd] = useState<Date | null>(null);
+  const [enrollPrimaryEnd, setEnrollPrimaryEnd] = useState<Date | null>(null);
+  const [enrollReserveEnd, setEnrollReserveEnd] = useState<Date | null>(null);
   const [savingSettings, setSavingSettings] = useState(false);
   const [modalRow, setModalRow] = useState<EnrollmentRow | null>(null);
   const [statusRow, setStatusRow] = useState<EnrollmentRow | null>(null);
@@ -58,7 +59,8 @@ export default function EnrollmentPage() {
   const fetchSettings = () => {
     fetch("/api/admin/settings").then((r) => r.json()).then((s) => {
       setEnrollStart(s.enrollment_start ? new Date(s.enrollment_start) : null);
-      setEnrollEnd(s.enrollment_end ? new Date(s.enrollment_end) : null);
+      setEnrollPrimaryEnd(s.enrollment_primary_end ? new Date(s.enrollment_primary_end) : null);
+      setEnrollReserveEnd(s.enrollment_reserve_end ? new Date(s.enrollment_reserve_end) : null);
     });
   };
 
@@ -87,13 +89,18 @@ export default function EnrollmentPage() {
   };
 
   const handleSaveSettings = async () => {
-    if (!enrollStart || !enrollEnd) { toast.error("กรุณากรอกวันเริ่มต้นและสิ้นสุด"); return; }
-    if (enrollStart >= enrollEnd) { toast.error("วันเริ่มต้นต้องก่อนวันสิ้นสุด"); return; }
+    if (!enrollStart || !enrollPrimaryEnd || !enrollReserveEnd) { toast.error("กรุณากรอกวันที่ให้ครบทั้ง 3 ช่อง"); return; }
+    if (enrollStart >= enrollPrimaryEnd) { toast.error("วันเริ่มต้นต้องก่อนวันสิ้นสุดตัวจริง"); return; }
+    if (enrollPrimaryEnd >= enrollReserveEnd) { toast.error("วันสิ้นสุดตัวจริงต้องก่อนวันสิ้นสุดตัวสำรอง"); return; }
     setSavingSettings(true);
     const res = await fetch("/api/admin/settings", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ enrollment_start: enrollStart.toISOString(), enrollment_end: enrollEnd.toISOString() }),
+      body: JSON.stringify({
+        enrollment_start: enrollStart.toISOString(),
+        enrollment_primary_end: enrollPrimaryEnd.toISOString(),
+        enrollment_reserve_end: enrollReserveEnd.toISOString(),
+      }),
     });
     if (res.ok) { toast.success("บันทึกช่วงเวลาสำเร็จ"); setShowSettings(false); }
     else toast.error("บันทึกไม่สำเร็จ");
@@ -101,12 +108,21 @@ export default function EnrollmentPage() {
   };
 
   const getPeriodLabel = () => {
-    if (!enrollStart || !enrollEnd) return "ยังไม่ได้กำหนด";
     const fmt = (d: Date) => d.toLocaleDateString("th-TH", { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
     const now = new Date();
-    const isOpen = now >= enrollStart && now <= enrollEnd;
-    const isClosed = now > enrollEnd;
-    return `${fmt(enrollStart)} - ${fmt(enrollEnd)} ${isOpen ? "(เปิดอยู่)" : isClosed ? "(ปิดแล้ว)" : "(ยังไม่เปิด)"}`;
+    const parts: string[] = [];
+    if (enrollStart) parts.push(`เริ่ม: ${fmt(enrollStart)}`);
+    if (enrollPrimaryEnd) {
+      const isPrimaryOpen = enrollStart && now >= enrollStart && now <= enrollPrimaryEnd;
+      const isPrimaryClosed = now > enrollPrimaryEnd;
+      parts.push(`ตัวจริง: ${fmt(enrollPrimaryEnd)} ${isPrimaryOpen ? "(เปิดอยู่)" : isPrimaryClosed ? "(ปิดแล้ว)" : ""}`);
+    }
+    if (enrollReserveEnd) {
+      const isReserveOpen = enrollPrimaryEnd && now > enrollPrimaryEnd && now <= enrollReserveEnd;
+      const isReserveClosed = now > enrollReserveEnd;
+      parts.push(`ตัวสำรอง: ${fmt(enrollReserveEnd)} ${isReserveOpen ? "(เปิดอยู่)" : isReserveClosed ? "(ปิดแล้ว)" : ""}`);
+    }
+    return parts.length > 0 ? parts.join(" | ") : "ยังไม่ได้กำหนด";
   };
 
   const columns: ColumnDef<EnrollmentRow>[] = [
@@ -198,8 +214,8 @@ export default function EnrollmentPage() {
       {showSettings && (
         <div className="bg-white border border-[var(--border)] rounded-xl p-4 mb-4 space-y-3">
           <h3 className="text-sm font-semibold text-[var(--text-primary)]">กำหนดช่วงเวลายืนยันสิทธิ์</h3>
-          <p className="text-xs text-[var(--text-secondary)]">นักเรียนจะยืนยันสิทธิ์ได้เฉพาะในช่วงเวลาที่กำหนด หากเกินกำหนดจะถูกตัดสิทธิ์อัตโนมัติ</p>
-          <div className="grid grid-cols-2 gap-4">
+          <p className="text-xs text-[var(--text-secondary)]">ตัวจริงยืนยันได้ตั้งแต่วันเริ่มต้นถึง deadline ตัวจริง ตัวสำรองยืนยันได้หลัง deadline ตัวจริงถึง deadline ตัวสำรอง หากไม่ยืนยันภายในกำหนดจะถูกสละสิทธิ์อัตโนมัติ</p>
+          <div className="grid grid-cols-3 gap-4">
             <div>
               <label className="block text-xs font-medium text-[var(--text-primary)] mb-1">วันเริ่มต้น</label>
               <DatePicker
@@ -221,10 +237,10 @@ export default function EnrollmentPage() {
               />
             </div>
             <div>
-              <label className="block text-xs font-medium text-[var(--text-primary)] mb-1">วันสิ้นสุด</label>
+              <label className="block text-xs font-medium text-[var(--text-primary)] mb-1">สิ้นสุดตัวจริง</label>
               <DatePicker
-                selected={enrollEnd}
-                onChange={(date: Date | null) => setEnrollEnd(date)}
+                selected={enrollPrimaryEnd}
+                onChange={(date: Date | null) => setEnrollPrimaryEnd(date)}
                 locale="th"
                 dateFormat="dd/MM/yyyy HH:mm"
                 showTimeSelect
@@ -234,10 +250,31 @@ export default function EnrollmentPage() {
                 showYearDropdown
                 showMonthDropdown
                 dropdownMode="select"
-                placeholderText="เลือกวันสิ้นสุด"
+                placeholderText="เลือก deadline ตัวจริง"
                 className="w-full px-3 py-2 rounded-lg border border-[var(--border)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
                 wrapperClassName="w-full"
                 minDate={enrollStart || undefined}
+                isClearable
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-[var(--text-primary)] mb-1">สิ้นสุดตัวสำรอง</label>
+              <DatePicker
+                selected={enrollReserveEnd}
+                onChange={(date: Date | null) => setEnrollReserveEnd(date)}
+                locale="th"
+                dateFormat="dd/MM/yyyy HH:mm"
+                showTimeSelect
+                timeFormat="HH:mm"
+                timeIntervals={15}
+                timeCaption="เวลา"
+                showYearDropdown
+                showMonthDropdown
+                dropdownMode="select"
+                placeholderText="เลือก deadline ตัวสำรอง"
+                className="w-full px-3 py-2 rounded-lg border border-[var(--border)] text-sm focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+                wrapperClassName="w-full"
+                minDate={enrollPrimaryEnd || undefined}
                 isClearable
               />
             </div>

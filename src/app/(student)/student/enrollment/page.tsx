@@ -18,7 +18,10 @@ type EnrollmentData = {
   documents: { type: string; fileUrl: string }[];
   periodStatus: "not_set" | "before" | "open" | "closed";
   enrollmentStart: string | null;
-  enrollmentEnd: string | null;
+  enrollmentPrimaryEnd: string | null;
+  enrollmentReserveEnd: string | null;
+  canConfirmReserve: boolean;
+  reserveQueueMessage: string | null;
 };
 
 const enrollDocLabels: Record<string, string> = {
@@ -123,7 +126,7 @@ export default function StudentEnrollmentPage() {
   const formatDate = (iso: string) =>
     new Date(iso).toLocaleDateString("th-TH", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" });
 
-  const canConfirm = data.periodStatus === "open" && data.confirmationStatus === "PENDING";
+  const canConfirm = data.periodStatus === "open" && data.confirmationStatus === "PENDING" && data.canConfirmReserve;
 
   return (
     <div className="space-y-6">
@@ -144,16 +147,23 @@ export default function StudentEnrollmentPage() {
           <CalendarClock className="w-5 h-5 text-blue-500 shrink-0" />
           <div>
             <p className="text-sm font-medium text-blue-800">ยังไม่ถึงช่วงเวลายืนยันสิทธิ์</p>
-            <p className="text-xs text-blue-600 mt-0.5">เปิดให้ยืนยันสิทธิ์ตั้งแต่ {formatDate(data.enrollmentStart)}</p>
+            <p className="text-xs text-blue-600 mt-0.5">
+              {data.result === "PASSED_PRIMARY"
+                ? `เปิดให้ยืนยันสิทธิ์ตั้งแต่ ${formatDate(data.enrollmentStart)}`
+                : `รอช่วงยืนยันสิทธิ์ตัวจริงสิ้นสุดก่อน${data.enrollmentPrimaryEnd ? ` (${formatDate(data.enrollmentPrimaryEnd)})` : ""}`
+              }
+            </p>
           </div>
         </div>
       )}
-      {data.periodStatus === "open" && data.enrollmentEnd && (
+      {data.periodStatus === "open" && (
         <div className="flex items-center gap-3 px-4 py-3 bg-green-50 border border-green-200 rounded-xl">
           <Clock className="w-5 h-5 text-green-500 shrink-0" />
           <div>
             <p className="text-sm font-medium text-green-800">อยู่ในช่วงเวลายืนยันสิทธิ์</p>
-            <p className="text-xs text-green-600 mt-0.5">สิ้นสุดวันที่ {formatDate(data.enrollmentEnd)}</p>
+            <p className="text-xs text-green-600 mt-0.5">
+              สิ้นสุดวันที่ {formatDate(data.result === "PASSED_PRIMARY" ? data.enrollmentPrimaryEnd! : data.enrollmentReserveEnd!)}
+            </p>
           </div>
         </div>
       )}
@@ -162,7 +172,18 @@ export default function StudentEnrollmentPage() {
           <Ban className="w-5 h-5 text-red-500 shrink-0" />
           <div>
             <p className="text-sm font-medium text-red-800">หมดเวลายืนยันสิทธิ์แล้ว</p>
-            <p className="text-xs text-red-600 mt-0.5">ไม่ได้ยืนยันสิทธิ์ภายในเวลาที่กำหนด ถูกตัดสิทธิ์อัตโนมัติ</p>
+            <p className="text-xs text-red-600 mt-0.5">ไม่ได้ยืนยันสิทธิ์ภายในเวลาที่กำหนด ถูกสละสิทธิ์อัตโนมัติ</p>
+          </div>
+        </div>
+      )}
+
+      {/* Reserve queue banner */}
+      {data.result === "PASSED_RESERVE" && data.confirmationStatus === "PENDING" && !data.canConfirmReserve && data.reserveQueueMessage && (
+        <div className="flex items-center gap-3 px-4 py-3 bg-purple-50 border border-purple-200 rounded-xl">
+          <Clock className="w-5 h-5 text-purple-500 shrink-0" />
+          <div>
+            <p className="text-sm font-medium text-purple-800">ยังไม่ถึงลำดับยืนยันสิทธิ์ของคุณ</p>
+            <p className="text-xs text-purple-600 mt-0.5">{data.reserveQueueMessage}</p>
           </div>
         </div>
       )}
@@ -196,7 +217,7 @@ export default function StudentEnrollmentPage() {
         </div>
       )}
 
-      {data.confirmationStatus === "PENDING" && data.periodStatus !== "open" && data.periodStatus !== "closed" && (
+      {data.confirmationStatus === "PENDING" && data.periodStatus !== "open" && data.periodStatus !== "closed" && data.canConfirmReserve && (
         <div className="text-center py-4">
           <p className="text-sm text-[var(--text-secondary)]">กรุณารอจนกว่าจะถึงช่วงเวลายืนยันสิทธิ์</p>
         </div>

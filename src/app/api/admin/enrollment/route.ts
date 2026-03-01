@@ -8,6 +8,35 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  // Auto-waive expired students
+  const settings = await prisma.systemSetting.findMany({
+    where: { key: { in: ["enrollment_primary_end", "enrollment_reserve_end"] } },
+  });
+  const settingsMap: Record<string, string> = {};
+  settings.forEach((s) => { settingsMap[s.key] = s.value; });
+  const now = new Date();
+  const primaryEnd = settingsMap.enrollment_primary_end ? new Date(settingsMap.enrollment_primary_end) : null;
+  const reserveEnd = settingsMap.enrollment_reserve_end ? new Date(settingsMap.enrollment_reserve_end) : null;
+
+  if (primaryEnd && now > primaryEnd) {
+    await prisma.enrollment.updateMany({
+      where: {
+        confirmationStatus: "PENDING",
+        student: { examResult: { result: "PASSED_PRIMARY" } },
+      },
+      data: { confirmationStatus: "WAIVED", confirmedAt: primaryEnd },
+    });
+  }
+  if (reserveEnd && now > reserveEnd) {
+    await prisma.enrollment.updateMany({
+      where: {
+        confirmationStatus: "PENDING",
+        student: { examResult: { result: "PASSED_RESERVE" } },
+      },
+      data: { confirmationStatus: "WAIVED", confirmedAt: reserveEnd },
+    });
+  }
+
   // Auto-create enrollment for students who passed but don't have enrollment yet
   const passedWithoutEnrollment = await prisma.examResult.findMany({
     where: {

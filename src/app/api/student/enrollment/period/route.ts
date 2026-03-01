@@ -9,7 +9,7 @@ export async function GET() {
   }
 
   const settings = await prisma.systemSetting.findMany({
-    where: { key: { in: ["enrollment_start", "enrollment_end"] } },
+    where: { key: { in: ["enrollment_start", "enrollment_primary_end", "enrollment_reserve_end"] } },
   });
 
   const map: Record<string, string> = {};
@@ -17,18 +17,21 @@ export async function GET() {
 
   const now = new Date();
   const start = map.enrollment_start ? new Date(map.enrollment_start) : null;
-  const end = map.enrollment_end ? new Date(map.enrollment_end) : null;
+  const primaryEnd = map.enrollment_primary_end ? new Date(map.enrollment_primary_end) : null;
+  const reserveEnd = map.enrollment_reserve_end ? new Date(map.enrollment_reserve_end) : null;
 
+  // General status based on the full window
   let status: "not_set" | "before" | "open" | "closed" = "not_set";
-  if (start && end) {
+  if (start && reserveEnd) {
     if (now < start) status = "before";
-    else if (now > end) status = "closed";
+    else if (now > reserveEnd) status = "closed";
     else status = "open";
   }
 
   return NextResponse.json({
     enrollmentStart: map.enrollment_start || null,
-    enrollmentEnd: map.enrollment_end || null,
+    enrollmentPrimaryEnd: map.enrollment_primary_end || null,
+    enrollmentReserveEnd: map.enrollment_reserve_end || null,
     status,
   });
 }
