@@ -45,6 +45,7 @@ const emptyAdmin = { username: "", fullName: "", password: "", role: "ADMIN" };
 export default function UsersPage() {
   const { data: session } = useSession();
   const isSuperAdmin = (session?.user as any)?.adminRole === "SUPER_ADMIN";
+  const isViewer = (session?.user as any)?.adminRole === "VIEWER";
   const [tab, setTab] = useState<"student" | "admin">("student");
   const [students, setStudents] = useState<Student[]>([]);
   const [admins, setAdmins] = useState<Admin[]>([]);
@@ -176,7 +177,7 @@ export default function UsersPage() {
       </div>
 
       <div className="flex gap-1 mb-4 bg-gray-100 rounded-lg p-1 w-fit">
-        {(["student", "admin"] as const).map((t) => (
+        {(["student", "admin"] as const).filter((t) => !(t === "admin" && isViewer)).map((t) => (
           <button key={t} onClick={() => setTab(t)} className={`px-4 py-1.5 rounded-md text-sm font-medium transition-colors ${tab === t ? "bg-white text-[var(--text-primary)] shadow-sm" : "text-[var(--text-secondary)]"}`}>
             {t === "student" ? "นักเรียน" : "ผู้ดูแลระบบ"}
           </button>
