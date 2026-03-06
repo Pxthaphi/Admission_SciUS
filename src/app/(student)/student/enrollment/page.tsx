@@ -21,6 +21,12 @@ type EnrollmentData = {
   enrollmentPrimaryEnd: string | null;
   enrollmentReserveEnd: string | null;
   canConfirmReserve: boolean;
+  reserveRound: {
+    roundNo: number;
+    rankFrom: number;
+    rankTo: number;
+    deadline: string;
+  } | null;
   reserveQueueMessage: string | null;
 };
 
@@ -142,15 +148,15 @@ export default function StudentEnrollmentPage() {
           </div>
         </div>
       )}
-      {data.periodStatus === "before" && data.enrollmentStart && (
+      {data.periodStatus === "before" && (
         <div className="flex items-center gap-3 px-4 py-3 bg-blue-50 border border-blue-200 rounded-xl">
           <CalendarClock className="w-5 h-5 text-blue-500 shrink-0" />
           <div>
             <p className="text-sm font-medium text-blue-800">ยังไม่ถึงช่วงเวลายืนยันสิทธิ์</p>
             <p className="text-xs text-blue-600 mt-0.5">
-              {data.result === "PASSED_PRIMARY"
+              {data.result === "PASSED_PRIMARY" && data.enrollmentStart
                 ? `เปิดให้ยืนยันสิทธิ์ตั้งแต่ ${formatDate(data.enrollmentStart)}`
-                : `รอช่วงยืนยันสิทธิ์ตัวจริงสิ้นสุดก่อน${data.enrollmentPrimaryEnd ? ` (${formatDate(data.enrollmentPrimaryEnd)})` : ""}`
+                : data.reserveQueueMessage || "กรุณารอประกาศจากทางโครงการ"
               }
             </p>
           </div>
@@ -162,7 +168,12 @@ export default function StudentEnrollmentPage() {
           <div>
             <p className="text-sm font-medium text-green-800">อยู่ในช่วงเวลายืนยันสิทธิ์</p>
             <p className="text-xs text-green-600 mt-0.5">
-              สิ้นสุดวันที่ {formatDate(data.result === "PASSED_PRIMARY" ? data.enrollmentPrimaryEnd! : data.enrollmentReserveEnd!)}
+              {data.result === "PASSED_PRIMARY"
+                ? `สิ้นสุดวันที่ ${formatDate(data.enrollmentPrimaryEnd!)}`
+                : data.reserveRound
+                  ? `รอบเรียกที่ ${data.reserveRound.roundNo} (ลำดับ ${data.reserveRound.rankFrom}-${data.reserveRound.rankTo}) ยืนยันภายใน ${formatDate(data.reserveRound.deadline)}`
+                  : data.reserveQueueMessage || "เปิดให้ยืนยันสิทธิ์แล้ว"
+              }
             </p>
           </div>
         </div>

@@ -10,13 +10,12 @@ export async function GET() {
 
   // Auto-waive expired students
   const settings = await prisma.systemSetting.findMany({
-    where: { key: { in: ["enrollment_primary_end", "enrollment_reserve_end"] } },
+    where: { key: { in: ["enrollment_primary_end"] } },
   });
   const settingsMap: Record<string, string> = {};
   settings.forEach((s) => { settingsMap[s.key] = s.value; });
   const now = new Date();
   const primaryEnd = settingsMap.enrollment_primary_end ? new Date(settingsMap.enrollment_primary_end) : null;
-  const reserveEnd = settingsMap.enrollment_reserve_end ? new Date(settingsMap.enrollment_reserve_end) : null;
 
   if (primaryEnd && now > primaryEnd) {
     await prisma.enrollment.updateMany({
@@ -27,14 +26,30 @@ export async function GET() {
       data: { confirmationStatus: "WAIVED", confirmedAt: primaryEnd },
     });
   }
-  if (reserveEnd && now > reserveEnd) {
-    await prisma.enrollment.updateMany({
-      where: {
-        confirmationStatus: "PENDING",
-        student: { examResult: { result: "PASSED_RESERVE" } },
-      },
-      data: { confirmationStatus: "WAIVED", confirmedAt: reserveEnd },
-    });
+
+  // Auto-waive reserve students whose round deadline has passed
+  const rounds = await prisma.reserveCallRound.findMany();
+  for (const round of rounds) {
+    if (now > round.deadline) {
+      const pendingInRound = await prisma.enrollment.findMany({
+        where: {
+          confirmationStatus: "PENDING",
+          student: {
+            examResult: {
+              result: "PASSED_RESERVE",
+              rank: { gte: round.rankFrom, lte: round.rankTo },
+            },
+          },
+        },
+        select: { id: true },
+      });
+      if (pendingInRound.length > 0) {
+        await prisma.enrollment.updateMany({
+          where: { id: { in: pendingInRound.map((e) => e.id) } },
+          data: { confirmationStatus: "WAIVED", confirmedAt: round.deadline },
+        });
+      }
+    }
   }
 
   // Auto-create enrollment for students who passed but don't have enrollment yet

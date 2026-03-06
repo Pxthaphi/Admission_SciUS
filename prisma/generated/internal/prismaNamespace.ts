@@ -393,6 +393,7 @@ export const ModelName = {
   ExamResult: 'ExamResult',
   Enrollment: 'Enrollment',
   AuditLog: 'AuditLog',
+  ReserveCallRound: 'ReserveCallRound',
   SystemSetting: 'SystemSetting'
 } as const
 
@@ -409,7 +410,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "admin" | "student" | "document" | "documentReview" | "examEligibility" | "examRoom" | "examResult" | "enrollment" | "auditLog" | "systemSetting"
+    modelProps: "admin" | "student" | "document" | "documentReview" | "examEligibility" | "examRoom" | "examResult" | "enrollment" | "auditLog" | "reserveCallRound" | "systemSetting"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1079,6 +1080,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ReserveCallRound: {
+      payload: Prisma.$ReserveCallRoundPayload<ExtArgs>
+      fields: Prisma.ReserveCallRoundFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ReserveCallRoundFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReserveCallRoundPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ReserveCallRoundFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReserveCallRoundPayload>
+        }
+        findFirst: {
+          args: Prisma.ReserveCallRoundFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReserveCallRoundPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ReserveCallRoundFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReserveCallRoundPayload>
+        }
+        findMany: {
+          args: Prisma.ReserveCallRoundFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReserveCallRoundPayload>[]
+        }
+        create: {
+          args: Prisma.ReserveCallRoundCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReserveCallRoundPayload>
+        }
+        createMany: {
+          args: Prisma.ReserveCallRoundCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ReserveCallRoundCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReserveCallRoundPayload>[]
+        }
+        delete: {
+          args: Prisma.ReserveCallRoundDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReserveCallRoundPayload>
+        }
+        update: {
+          args: Prisma.ReserveCallRoundUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReserveCallRoundPayload>
+        }
+        deleteMany: {
+          args: Prisma.ReserveCallRoundDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ReserveCallRoundUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ReserveCallRoundUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReserveCallRoundPayload>[]
+        }
+        upsert: {
+          args: Prisma.ReserveCallRoundUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReserveCallRoundPayload>
+        }
+        aggregate: {
+          args: Prisma.ReserveCallRoundAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateReserveCallRound>
+        }
+        groupBy: {
+          args: Prisma.ReserveCallRoundGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReserveCallRoundGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ReserveCallRoundCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReserveCallRoundCountAggregateOutputType> | number
+        }
+      }
+    }
     SystemSetting: {
       payload: Prisma.$SystemSettingPayload<ExtArgs>
       fields: Prisma.SystemSettingFieldRefs
@@ -1334,6 +1409,20 @@ export const AuditLogScalarFieldEnum = {
 } as const
 
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
+
+
+export const ReserveCallRoundScalarFieldEnum = {
+  id: 'id',
+  roundNo: 'roundNo',
+  rankFrom: 'rankFrom',
+  rankTo: 'rankTo',
+  deadline: 'deadline',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ReserveCallRoundScalarFieldEnum = (typeof ReserveCallRoundScalarFieldEnum)[keyof typeof ReserveCallRoundScalarFieldEnum]
 
 
 export const SystemSettingScalarFieldEnum = {
@@ -1649,6 +1738,7 @@ export type GlobalOmitConfig = {
   examResult?: Prisma.ExamResultOmit
   enrollment?: Prisma.EnrollmentOmit
   auditLog?: Prisma.AuditLogOmit
+  reserveCallRound?: Prisma.ReserveCallRoundOmit
   systemSetting?: Prisma.SystemSettingOmit
 }
 

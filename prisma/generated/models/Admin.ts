@@ -237,6 +237,7 @@ export type AdminWhereInput = {
   examRooms?: Prisma.ExamRoomListRelationFilter
   examResults?: Prisma.ExamResultListRelationFilter
   enrollments?: Prisma.EnrollmentListRelationFilter
+  reserveCallRounds?: Prisma.ReserveCallRoundListRelationFilter
 }
 
 export type AdminOrderByWithRelationInput = {
@@ -252,6 +253,7 @@ export type AdminOrderByWithRelationInput = {
   examRooms?: Prisma.ExamRoomOrderByRelationAggregateInput
   examResults?: Prisma.ExamResultOrderByRelationAggregateInput
   enrollments?: Prisma.EnrollmentOrderByRelationAggregateInput
+  reserveCallRounds?: Prisma.ReserveCallRoundOrderByRelationAggregateInput
 }
 
 export type AdminWhereUniqueInput = Prisma.AtLeast<{
@@ -270,6 +272,7 @@ export type AdminWhereUniqueInput = Prisma.AtLeast<{
   examRooms?: Prisma.ExamRoomListRelationFilter
   examResults?: Prisma.ExamResultListRelationFilter
   enrollments?: Prisma.EnrollmentListRelationFilter
+  reserveCallRounds?: Prisma.ReserveCallRoundListRelationFilter
 }, "id" | "username">
 
 export type AdminOrderByWithAggregationInput = {
@@ -312,6 +315,7 @@ export type AdminCreateInput = {
   examRooms?: Prisma.ExamRoomCreateNestedManyWithoutAdminInput
   examResults?: Prisma.ExamResultCreateNestedManyWithoutAdminInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutReviewerInput
+  reserveCallRounds?: Prisma.ReserveCallRoundCreateNestedManyWithoutAdminInput
 }
 
 export type AdminUncheckedCreateInput = {
@@ -327,6 +331,7 @@ export type AdminUncheckedCreateInput = {
   examRooms?: Prisma.ExamRoomUncheckedCreateNestedManyWithoutAdminInput
   examResults?: Prisma.ExamResultUncheckedCreateNestedManyWithoutAdminInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutReviewerInput
+  reserveCallRounds?: Prisma.ReserveCallRoundUncheckedCreateNestedManyWithoutAdminInput
 }
 
 export type AdminUpdateInput = {
@@ -341,6 +346,7 @@ export type AdminUpdateInput = {
   examRooms?: Prisma.ExamRoomUpdateManyWithoutAdminNestedInput
   examResults?: Prisma.ExamResultUpdateManyWithoutAdminNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutReviewerNestedInput
+  reserveCallRounds?: Prisma.ReserveCallRoundUpdateManyWithoutAdminNestedInput
 }
 
 export type AdminUncheckedUpdateInput = {
@@ -356,6 +362,7 @@ export type AdminUncheckedUpdateInput = {
   examRooms?: Prisma.ExamRoomUncheckedUpdateManyWithoutAdminNestedInput
   examResults?: Prisma.ExamResultUncheckedUpdateManyWithoutAdminNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutReviewerNestedInput
+  reserveCallRounds?: Prisma.ReserveCallRoundUncheckedUpdateManyWithoutAdminNestedInput
 }
 
 export type AdminCreateManyInput = {
@@ -530,6 +537,22 @@ export type AdminUpdateOneWithoutEnrollmentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.AdminUpdateToOneWithWhereWithoutEnrollmentsInput, Prisma.AdminUpdateWithoutEnrollmentsInput>, Prisma.AdminUncheckedUpdateWithoutEnrollmentsInput>
 }
 
+export type AdminCreateNestedOneWithoutReserveCallRoundsInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutReserveCallRoundsInput, Prisma.AdminUncheckedCreateWithoutReserveCallRoundsInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutReserveCallRoundsInput
+  connect?: Prisma.AdminWhereUniqueInput
+}
+
+export type AdminUpdateOneWithoutReserveCallRoundsNestedInput = {
+  create?: Prisma.XOR<Prisma.AdminCreateWithoutReserveCallRoundsInput, Prisma.AdminUncheckedCreateWithoutReserveCallRoundsInput>
+  connectOrCreate?: Prisma.AdminCreateOrConnectWithoutReserveCallRoundsInput
+  upsert?: Prisma.AdminUpsertWithoutReserveCallRoundsInput
+  disconnect?: Prisma.AdminWhereInput | boolean
+  delete?: Prisma.AdminWhereInput | boolean
+  connect?: Prisma.AdminWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AdminUpdateToOneWithWhereWithoutReserveCallRoundsInput, Prisma.AdminUpdateWithoutReserveCallRoundsInput>, Prisma.AdminUncheckedUpdateWithoutReserveCallRoundsInput>
+}
+
 export type AdminCreateWithoutDocumentReviewsInput = {
   username: string
   password: string
@@ -541,6 +564,7 @@ export type AdminCreateWithoutDocumentReviewsInput = {
   examRooms?: Prisma.ExamRoomCreateNestedManyWithoutAdminInput
   examResults?: Prisma.ExamResultCreateNestedManyWithoutAdminInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutReviewerInput
+  reserveCallRounds?: Prisma.ReserveCallRoundCreateNestedManyWithoutAdminInput
 }
 
 export type AdminUncheckedCreateWithoutDocumentReviewsInput = {
@@ -555,6 +579,7 @@ export type AdminUncheckedCreateWithoutDocumentReviewsInput = {
   examRooms?: Prisma.ExamRoomUncheckedCreateNestedManyWithoutAdminInput
   examResults?: Prisma.ExamResultUncheckedCreateNestedManyWithoutAdminInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutReviewerInput
+  reserveCallRounds?: Prisma.ReserveCallRoundUncheckedCreateNestedManyWithoutAdminInput
 }
 
 export type AdminCreateOrConnectWithoutDocumentReviewsInput = {
@@ -584,6 +609,7 @@ export type AdminUpdateWithoutDocumentReviewsInput = {
   examRooms?: Prisma.ExamRoomUpdateManyWithoutAdminNestedInput
   examResults?: Prisma.ExamResultUpdateManyWithoutAdminNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutReviewerNestedInput
+  reserveCallRounds?: Prisma.ReserveCallRoundUpdateManyWithoutAdminNestedInput
 }
 
 export type AdminUncheckedUpdateWithoutDocumentReviewsInput = {
@@ -598,6 +624,7 @@ export type AdminUncheckedUpdateWithoutDocumentReviewsInput = {
   examRooms?: Prisma.ExamRoomUncheckedUpdateManyWithoutAdminNestedInput
   examResults?: Prisma.ExamResultUncheckedUpdateManyWithoutAdminNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutReviewerNestedInput
+  reserveCallRounds?: Prisma.ReserveCallRoundUncheckedUpdateManyWithoutAdminNestedInput
 }
 
 export type AdminCreateWithoutExamEligibilitiesInput = {
@@ -611,6 +638,7 @@ export type AdminCreateWithoutExamEligibilitiesInput = {
   examRooms?: Prisma.ExamRoomCreateNestedManyWithoutAdminInput
   examResults?: Prisma.ExamResultCreateNestedManyWithoutAdminInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutReviewerInput
+  reserveCallRounds?: Prisma.ReserveCallRoundCreateNestedManyWithoutAdminInput
 }
 
 export type AdminUncheckedCreateWithoutExamEligibilitiesInput = {
@@ -625,6 +653,7 @@ export type AdminUncheckedCreateWithoutExamEligibilitiesInput = {
   examRooms?: Prisma.ExamRoomUncheckedCreateNestedManyWithoutAdminInput
   examResults?: Prisma.ExamResultUncheckedCreateNestedManyWithoutAdminInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutReviewerInput
+  reserveCallRounds?: Prisma.ReserveCallRoundUncheckedCreateNestedManyWithoutAdminInput
 }
 
 export type AdminCreateOrConnectWithoutExamEligibilitiesInput = {
@@ -654,6 +683,7 @@ export type AdminUpdateWithoutExamEligibilitiesInput = {
   examRooms?: Prisma.ExamRoomUpdateManyWithoutAdminNestedInput
   examResults?: Prisma.ExamResultUpdateManyWithoutAdminNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutReviewerNestedInput
+  reserveCallRounds?: Prisma.ReserveCallRoundUpdateManyWithoutAdminNestedInput
 }
 
 export type AdminUncheckedUpdateWithoutExamEligibilitiesInput = {
@@ -668,6 +698,7 @@ export type AdminUncheckedUpdateWithoutExamEligibilitiesInput = {
   examRooms?: Prisma.ExamRoomUncheckedUpdateManyWithoutAdminNestedInput
   examResults?: Prisma.ExamResultUncheckedUpdateManyWithoutAdminNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutReviewerNestedInput
+  reserveCallRounds?: Prisma.ReserveCallRoundUncheckedUpdateManyWithoutAdminNestedInput
 }
 
 export type AdminCreateWithoutExamRoomsInput = {
@@ -681,6 +712,7 @@ export type AdminCreateWithoutExamRoomsInput = {
   examEligibilities?: Prisma.ExamEligibilityCreateNestedManyWithoutAdminInput
   examResults?: Prisma.ExamResultCreateNestedManyWithoutAdminInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutReviewerInput
+  reserveCallRounds?: Prisma.ReserveCallRoundCreateNestedManyWithoutAdminInput
 }
 
 export type AdminUncheckedCreateWithoutExamRoomsInput = {
@@ -695,6 +727,7 @@ export type AdminUncheckedCreateWithoutExamRoomsInput = {
   examEligibilities?: Prisma.ExamEligibilityUncheckedCreateNestedManyWithoutAdminInput
   examResults?: Prisma.ExamResultUncheckedCreateNestedManyWithoutAdminInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutReviewerInput
+  reserveCallRounds?: Prisma.ReserveCallRoundUncheckedCreateNestedManyWithoutAdminInput
 }
 
 export type AdminCreateOrConnectWithoutExamRoomsInput = {
@@ -724,6 +757,7 @@ export type AdminUpdateWithoutExamRoomsInput = {
   examEligibilities?: Prisma.ExamEligibilityUpdateManyWithoutAdminNestedInput
   examResults?: Prisma.ExamResultUpdateManyWithoutAdminNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutReviewerNestedInput
+  reserveCallRounds?: Prisma.ReserveCallRoundUpdateManyWithoutAdminNestedInput
 }
 
 export type AdminUncheckedUpdateWithoutExamRoomsInput = {
@@ -738,6 +772,7 @@ export type AdminUncheckedUpdateWithoutExamRoomsInput = {
   examEligibilities?: Prisma.ExamEligibilityUncheckedUpdateManyWithoutAdminNestedInput
   examResults?: Prisma.ExamResultUncheckedUpdateManyWithoutAdminNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutReviewerNestedInput
+  reserveCallRounds?: Prisma.ReserveCallRoundUncheckedUpdateManyWithoutAdminNestedInput
 }
 
 export type AdminCreateWithoutExamResultsInput = {
@@ -751,6 +786,7 @@ export type AdminCreateWithoutExamResultsInput = {
   examEligibilities?: Prisma.ExamEligibilityCreateNestedManyWithoutAdminInput
   examRooms?: Prisma.ExamRoomCreateNestedManyWithoutAdminInput
   enrollments?: Prisma.EnrollmentCreateNestedManyWithoutReviewerInput
+  reserveCallRounds?: Prisma.ReserveCallRoundCreateNestedManyWithoutAdminInput
 }
 
 export type AdminUncheckedCreateWithoutExamResultsInput = {
@@ -765,6 +801,7 @@ export type AdminUncheckedCreateWithoutExamResultsInput = {
   examEligibilities?: Prisma.ExamEligibilityUncheckedCreateNestedManyWithoutAdminInput
   examRooms?: Prisma.ExamRoomUncheckedCreateNestedManyWithoutAdminInput
   enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutReviewerInput
+  reserveCallRounds?: Prisma.ReserveCallRoundUncheckedCreateNestedManyWithoutAdminInput
 }
 
 export type AdminCreateOrConnectWithoutExamResultsInput = {
@@ -794,6 +831,7 @@ export type AdminUpdateWithoutExamResultsInput = {
   examEligibilities?: Prisma.ExamEligibilityUpdateManyWithoutAdminNestedInput
   examRooms?: Prisma.ExamRoomUpdateManyWithoutAdminNestedInput
   enrollments?: Prisma.EnrollmentUpdateManyWithoutReviewerNestedInput
+  reserveCallRounds?: Prisma.ReserveCallRoundUpdateManyWithoutAdminNestedInput
 }
 
 export type AdminUncheckedUpdateWithoutExamResultsInput = {
@@ -808,6 +846,7 @@ export type AdminUncheckedUpdateWithoutExamResultsInput = {
   examEligibilities?: Prisma.ExamEligibilityUncheckedUpdateManyWithoutAdminNestedInput
   examRooms?: Prisma.ExamRoomUncheckedUpdateManyWithoutAdminNestedInput
   enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutReviewerNestedInput
+  reserveCallRounds?: Prisma.ReserveCallRoundUncheckedUpdateManyWithoutAdminNestedInput
 }
 
 export type AdminCreateWithoutEnrollmentsInput = {
@@ -821,6 +860,7 @@ export type AdminCreateWithoutEnrollmentsInput = {
   examEligibilities?: Prisma.ExamEligibilityCreateNestedManyWithoutAdminInput
   examRooms?: Prisma.ExamRoomCreateNestedManyWithoutAdminInput
   examResults?: Prisma.ExamResultCreateNestedManyWithoutAdminInput
+  reserveCallRounds?: Prisma.ReserveCallRoundCreateNestedManyWithoutAdminInput
 }
 
 export type AdminUncheckedCreateWithoutEnrollmentsInput = {
@@ -835,6 +875,7 @@ export type AdminUncheckedCreateWithoutEnrollmentsInput = {
   examEligibilities?: Prisma.ExamEligibilityUncheckedCreateNestedManyWithoutAdminInput
   examRooms?: Prisma.ExamRoomUncheckedCreateNestedManyWithoutAdminInput
   examResults?: Prisma.ExamResultUncheckedCreateNestedManyWithoutAdminInput
+  reserveCallRounds?: Prisma.ReserveCallRoundUncheckedCreateNestedManyWithoutAdminInput
 }
 
 export type AdminCreateOrConnectWithoutEnrollmentsInput = {
@@ -864,6 +905,7 @@ export type AdminUpdateWithoutEnrollmentsInput = {
   examEligibilities?: Prisma.ExamEligibilityUpdateManyWithoutAdminNestedInput
   examRooms?: Prisma.ExamRoomUpdateManyWithoutAdminNestedInput
   examResults?: Prisma.ExamResultUpdateManyWithoutAdminNestedInput
+  reserveCallRounds?: Prisma.ReserveCallRoundUpdateManyWithoutAdminNestedInput
 }
 
 export type AdminUncheckedUpdateWithoutEnrollmentsInput = {
@@ -878,6 +920,81 @@ export type AdminUncheckedUpdateWithoutEnrollmentsInput = {
   examEligibilities?: Prisma.ExamEligibilityUncheckedUpdateManyWithoutAdminNestedInput
   examRooms?: Prisma.ExamRoomUncheckedUpdateManyWithoutAdminNestedInput
   examResults?: Prisma.ExamResultUncheckedUpdateManyWithoutAdminNestedInput
+  reserveCallRounds?: Prisma.ReserveCallRoundUncheckedUpdateManyWithoutAdminNestedInput
+}
+
+export type AdminCreateWithoutReserveCallRoundsInput = {
+  username: string
+  password: string
+  fullName: string
+  role?: $Enums.AdminRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  documentReviews?: Prisma.DocumentReviewCreateNestedManyWithoutReviewerInput
+  examEligibilities?: Prisma.ExamEligibilityCreateNestedManyWithoutAdminInput
+  examRooms?: Prisma.ExamRoomCreateNestedManyWithoutAdminInput
+  examResults?: Prisma.ExamResultCreateNestedManyWithoutAdminInput
+  enrollments?: Prisma.EnrollmentCreateNestedManyWithoutReviewerInput
+}
+
+export type AdminUncheckedCreateWithoutReserveCallRoundsInput = {
+  id?: number
+  username: string
+  password: string
+  fullName: string
+  role?: $Enums.AdminRole
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  documentReviews?: Prisma.DocumentReviewUncheckedCreateNestedManyWithoutReviewerInput
+  examEligibilities?: Prisma.ExamEligibilityUncheckedCreateNestedManyWithoutAdminInput
+  examRooms?: Prisma.ExamRoomUncheckedCreateNestedManyWithoutAdminInput
+  examResults?: Prisma.ExamResultUncheckedCreateNestedManyWithoutAdminInput
+  enrollments?: Prisma.EnrollmentUncheckedCreateNestedManyWithoutReviewerInput
+}
+
+export type AdminCreateOrConnectWithoutReserveCallRoundsInput = {
+  where: Prisma.AdminWhereUniqueInput
+  create: Prisma.XOR<Prisma.AdminCreateWithoutReserveCallRoundsInput, Prisma.AdminUncheckedCreateWithoutReserveCallRoundsInput>
+}
+
+export type AdminUpsertWithoutReserveCallRoundsInput = {
+  update: Prisma.XOR<Prisma.AdminUpdateWithoutReserveCallRoundsInput, Prisma.AdminUncheckedUpdateWithoutReserveCallRoundsInput>
+  create: Prisma.XOR<Prisma.AdminCreateWithoutReserveCallRoundsInput, Prisma.AdminUncheckedCreateWithoutReserveCallRoundsInput>
+  where?: Prisma.AdminWhereInput
+}
+
+export type AdminUpdateToOneWithWhereWithoutReserveCallRoundsInput = {
+  where?: Prisma.AdminWhereInput
+  data: Prisma.XOR<Prisma.AdminUpdateWithoutReserveCallRoundsInput, Prisma.AdminUncheckedUpdateWithoutReserveCallRoundsInput>
+}
+
+export type AdminUpdateWithoutReserveCallRoundsInput = {
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumAdminRoleFieldUpdateOperationsInput | $Enums.AdminRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documentReviews?: Prisma.DocumentReviewUpdateManyWithoutReviewerNestedInput
+  examEligibilities?: Prisma.ExamEligibilityUpdateManyWithoutAdminNestedInput
+  examRooms?: Prisma.ExamRoomUpdateManyWithoutAdminNestedInput
+  examResults?: Prisma.ExamResultUpdateManyWithoutAdminNestedInput
+  enrollments?: Prisma.EnrollmentUpdateManyWithoutReviewerNestedInput
+}
+
+export type AdminUncheckedUpdateWithoutReserveCallRoundsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  username?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  fullName?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumAdminRoleFieldUpdateOperationsInput | $Enums.AdminRole
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  documentReviews?: Prisma.DocumentReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  examEligibilities?: Prisma.ExamEligibilityUncheckedUpdateManyWithoutAdminNestedInput
+  examRooms?: Prisma.ExamRoomUncheckedUpdateManyWithoutAdminNestedInput
+  examResults?: Prisma.ExamResultUncheckedUpdateManyWithoutAdminNestedInput
+  enrollments?: Prisma.EnrollmentUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 
@@ -891,6 +1008,7 @@ export type AdminCountOutputType = {
   examRooms: number
   examResults: number
   enrollments: number
+  reserveCallRounds: number
 }
 
 export type AdminCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -899,6 +1017,7 @@ export type AdminCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
   examRooms?: boolean | AdminCountOutputTypeCountExamRoomsArgs
   examResults?: boolean | AdminCountOutputTypeCountExamResultsArgs
   enrollments?: boolean | AdminCountOutputTypeCountEnrollmentsArgs
+  reserveCallRounds?: boolean | AdminCountOutputTypeCountReserveCallRoundsArgs
 }
 
 /**
@@ -946,6 +1065,13 @@ export type AdminCountOutputTypeCountEnrollmentsArgs<ExtArgs extends runtime.Typ
   where?: Prisma.EnrollmentWhereInput
 }
 
+/**
+ * AdminCountOutputType without action
+ */
+export type AdminCountOutputTypeCountReserveCallRoundsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReserveCallRoundWhereInput
+}
+
 
 export type AdminSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -960,6 +1086,7 @@ export type AdminSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   examRooms?: boolean | Prisma.Admin$examRoomsArgs<ExtArgs>
   examResults?: boolean | Prisma.Admin$examResultsArgs<ExtArgs>
   enrollments?: boolean | Prisma.Admin$enrollmentsArgs<ExtArgs>
+  reserveCallRounds?: boolean | Prisma.Admin$reserveCallRoundsArgs<ExtArgs>
   _count?: boolean | Prisma.AdminCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["admin"]>
 
@@ -1000,6 +1127,7 @@ export type AdminInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   examRooms?: boolean | Prisma.Admin$examRoomsArgs<ExtArgs>
   examResults?: boolean | Prisma.Admin$examResultsArgs<ExtArgs>
   enrollments?: boolean | Prisma.Admin$enrollmentsArgs<ExtArgs>
+  reserveCallRounds?: boolean | Prisma.Admin$reserveCallRoundsArgs<ExtArgs>
   _count?: boolean | Prisma.AdminCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AdminIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1013,6 +1141,7 @@ export type $AdminPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     examRooms: Prisma.$ExamRoomPayload<ExtArgs>[]
     examResults: Prisma.$ExamResultPayload<ExtArgs>[]
     enrollments: Prisma.$EnrollmentPayload<ExtArgs>[]
+    reserveCallRounds: Prisma.$ReserveCallRoundPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1421,6 +1550,7 @@ export interface Prisma__AdminClient<T, Null = never, ExtArgs extends runtime.Ty
   examRooms<T extends Prisma.Admin$examRoomsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$examRoomsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExamRoomPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   examResults<T extends Prisma.Admin$examResultsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$examResultsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ExamResultPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   enrollments<T extends Prisma.Admin$enrollmentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$enrollmentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EnrollmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  reserveCallRounds<T extends Prisma.Admin$reserveCallRoundsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Admin$reserveCallRoundsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReserveCallRoundPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1962,6 +2092,30 @@ export type Admin$enrollmentsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.EnrollmentScalarFieldEnum | Prisma.EnrollmentScalarFieldEnum[]
+}
+
+/**
+ * Admin.reserveCallRounds
+ */
+export type Admin$reserveCallRoundsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ReserveCallRound
+   */
+  select?: Prisma.ReserveCallRoundSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ReserveCallRound
+   */
+  omit?: Prisma.ReserveCallRoundOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReserveCallRoundInclude<ExtArgs> | null
+  where?: Prisma.ReserveCallRoundWhereInput
+  orderBy?: Prisma.ReserveCallRoundOrderByWithRelationInput | Prisma.ReserveCallRoundOrderByWithRelationInput[]
+  cursor?: Prisma.ReserveCallRoundWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReserveCallRoundScalarFieldEnum | Prisma.ReserveCallRoundScalarFieldEnum[]
 }
 
 /**

@@ -62,6 +62,7 @@ model Admin {
   examRooms       ExamRoom[]
   examResults     ExamResult[]
   enrollments     Enrollment[]
+  reserveCallRounds ReserveCallRound[]
 }
 
 model Student {
@@ -200,6 +201,19 @@ model AuditLog {
   oldValue    Json?
   newValue    Json?
   createdAt   DateTime @default(now())
+}
+
+model ReserveCallRound {
+  id        Int      @id @default(autoincrement())
+  roundNo   Int      // รอบที่ 1, 2, 3, ...
+  rankFrom  Int      // เรียกลำดับที่ (เริ่ม)
+  rankTo    Int      // เรียกลำดับที่ (สิ้นสุด)
+  deadline  DateTime // deadline ยืนยันสิทธิ์ของรอบนี้
+  createdBy Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  admin Admin? @relation(fields: [createdBy], references: [id])
 }
 
 model SystemSetting {

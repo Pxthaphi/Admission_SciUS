@@ -63,6 +63,11 @@ export type Enrollment = Prisma.EnrollmentModel
  */
 export type AuditLog = Prisma.AuditLogModel
 /**
+ * Model ReserveCallRound
+ * 
+ */
+export type ReserveCallRound = Prisma.ReserveCallRoundModel
+/**
  * Model SystemSetting
  * 
  */

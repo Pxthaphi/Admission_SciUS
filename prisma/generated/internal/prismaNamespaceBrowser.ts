@@ -60,6 +60,7 @@ export const ModelName = {
   ExamResult: 'ExamResult',
   Enrollment: 'Enrollment',
   AuditLog: 'AuditLog',
+  ReserveCallRound: 'ReserveCallRound',
   SystemSetting: 'SystemSetting'
 } as const
 
@@ -221,6 +222,20 @@ export const AuditLogScalarFieldEnum = {
 } as const
 
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
+
+
+export const ReserveCallRoundScalarFieldEnum = {
+  id: 'id',
+  roundNo: 'roundNo',
+  rankFrom: 'rankFrom',
+  rankTo: 'rankTo',
+  deadline: 'deadline',
+  createdBy: 'createdBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ReserveCallRoundScalarFieldEnum = (typeof ReserveCallRoundScalarFieldEnum)[keyof typeof ReserveCallRoundScalarFieldEnum]
 
 
 export const SystemSettingScalarFieldEnum = {
