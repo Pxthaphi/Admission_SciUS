@@ -118,33 +118,9 @@ export async function GET() {
 
   const periodStatus = getPeriodStatus(now, examResult.result, settings, allPrimaryDone);
 
-  // Reserve queue logic
-  let canConfirmReserve = true;
-  let reserveQueueMessage: string | null = null;
-
-  if (examResult.result === "PASSED_RESERVE") {
-    if (!allPrimaryDone) {
-      // Primary students still pending
-      canConfirmReserve = false;
-      reserveQueueMessage = "รอตัวจริงยืนยัน/สละสิทธิ์ให้ครบก่อน";
-    } else {
-      // All primaries done, check reserve queue order
-      const nextReserve = await prisma.enrollment.findFirst({
-        where: {
-          confirmationStatus: "PENDING",
-          student: { examResult: { result: "PASSED_RESERVE" } },
-        },
-        include: { student: { include: { examResult: true } } },
-        orderBy: { student: { examResult: { rank: "asc" } } },
-      });
-
-      if (nextReserve && nextReserve.studentId !== studentId) {
-        canConfirmReserve = false;
-        const nextRank = nextReserve.student.examResult?.rank;
-        reserveQueueMessage = `รอตัวสำรองลำดับที่ ${nextRank} ยืนยัน/สละสิทธิ์ก่อน`;
-      }
-    }
-  }
+  // Reserve students can confirm/waive freely (no queue blocking)
+  const canConfirmReserve = true;
+  const reserveQueueMessage: string | null = null;
 
   return NextResponse.json({
     allowed: true,
@@ -210,25 +186,7 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ error: "หมดเวลายืนยันสิทธิ์แล้ว" }, { status: 400 });
   }
 
-  // Reserve queue validation
-  if (examResult.result === "PASSED_RESERVE") {
-    if (!allPrimaryDone) {
-      return NextResponse.json({ error: "ยังไม่สามารถยืนยันสิทธิ์ได้ รอตัวจริงยืนยัน/สละสิทธิ์ให้ครบก่อน" }, { status: 400 });
-    }
-
-    const nextReserve = await prisma.enrollment.findFirst({
-      where: {
-        confirmationStatus: "PENDING",
-        student: { examResult: { result: "PASSED_RESERVE" } },
-      },
-      include: { student: { include: { examResult: true } } },
-      orderBy: { student: { examResult: { rank: "asc" } } },
-    });
-
-    if (nextReserve && nextReserve.studentId !== studentId) {
-      return NextResponse.json({ error: "ยังไม่ถึงลำดับของคุณ กรุณารอตัวสำรองลำดับก่อนหน้ายืนยัน/สละสิทธิ์ก่อน" }, { status: 400 });
-    }
-  }
+  // Reserve students can confirm/waive freely — no queue blocking
 
   const enrollment = await prisma.enrollment.update({
     where: { studentId },

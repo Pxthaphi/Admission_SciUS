@@ -177,17 +177,6 @@ export default function StudentEnrollmentPage() {
         </div>
       )}
 
-      {/* Reserve queue banner */}
-      {data.result === "PASSED_RESERVE" && data.confirmationStatus === "PENDING" && !data.canConfirmReserve && data.reserveQueueMessage && (
-        <div className="flex items-center gap-3 px-4 py-3 bg-purple-50 border border-purple-200 rounded-xl">
-          <Clock className="w-5 h-5 text-purple-500 shrink-0" />
-          <div>
-            <p className="text-sm font-medium text-purple-800">ยังไม่ถึงลำดับยืนยันสิทธิ์ของคุณ</p>
-            <p className="text-xs text-purple-600 mt-0.5">{data.reserveQueueMessage}</p>
-          </div>
-        </div>
-      )}
-
       {/* Result Card */}
       <div className="bg-white rounded-xl border border-gray-100 shadow-sm p-6">
         <div className="flex items-center justify-between">
